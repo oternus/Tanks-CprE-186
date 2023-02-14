@@ -1,8 +1,10 @@
 import pygame    
 
 # initializing the window
-pygame.init() # initscr(); 
-screen = pygame.display.set_mode((800,800))
+pygame.init() # initscr();
+Width = 800
+Height = 800
+screen = pygame.display.set_mode((Width,Height))
 logo = pygame.image.load("logo.png") # image.png is the logo
 pygame.display.set_icon(logo) # refresh();
 pygame.display.set_caption("My Game") # name of program
