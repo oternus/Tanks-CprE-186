@@ -25,6 +25,12 @@ def trajectory(initalAngle, power):
     velX = power * math.cos(inRads)
     velY = (power * math.sin(inRads)) - gravity * time
 
+    # y=tanθ⋅x−(g/2⋅u2⋅cos2θ)⋅x2
+    arc = (math.tan(inRads) * disX) - (gravity/(2 * math.pow(power,2) * math.pow(math.cos(inRads),2) * math.pow(disX,2)))
+    
+    return arc
+
+def distances():
     # the time the max height is reached
     maxHeightTime = (power * math.sin(inRads)) / gravity
 
@@ -34,7 +40,4 @@ def trajectory(initalAngle, power):
     # finds the total distance traveled on the x axis
     totRange = (math.pow(power, 2) * math.sin(2 * inRads)) / gravity
 
-    # y=tanθ⋅x−(g/2⋅u2⋅cos2θ)⋅x2
-    arc = (math.tan(inRads) * disX) - (gravity/(2 * math.pow(power,2) * math.pow(math.cos(inRads),2) * math.pow(disX,2)))
     
-    return arc
