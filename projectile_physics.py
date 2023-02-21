@@ -24,9 +24,10 @@ magDis = math.sqrt(math.pow(disX, 2) + math.pow(disY, 2))
 velX = power * math.cos(inRads)
 velY = (power * math.sin(inRads)) - gravity * time
 
-# trajectory
+def trajectory():
 # y=tanθ⋅x−(g/2⋅u2⋅cos2θ)⋅x2
-arc = (math.tan(inRads) * disX) - (gravity/(2 * math.pow(power,2) * math.pow(math.cos(inRads),2) * math.pow(disX,2)))
+    arc = (math.tan(inRads) * disX) - (gravity/(2 * math.pow(power,2) * math.pow(math.cos(inRads),2) * math.pow(disX,2)))
+    return arc
 
 # the time the max height is reached
 maxHeightTime = (power * math.sin(inRads)) / gravity
