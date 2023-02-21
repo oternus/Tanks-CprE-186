@@ -2,9 +2,11 @@ import math;
 
 gravity = 9.8 # meters/sec
 
-# initalAngle - user imput would be in degrees
-# power - user imput
-# time - in seconds i th
+# initalAngle - user input would be in degrees 0-180
+# power - user input 0-100
+# idk how to do user input so I just set the angle and power to some values
+# time - in seconds
+
 initalAngle = 45
 power = 50
 
@@ -33,4 +35,4 @@ maxHeightTime = (power * math.sin(inRads)) / gravity
 maxHeight = (math.pow(power, 2) * math.pow(math.sin(inRads), 2)) / (2 * gravity)
 
 # finds the total distance traveled on the x axis
-range = (math.pow(power, 2) * math.sin(2 * inRads)) / gravity
+totRange = (math.pow(power, 2) * math.sin(2 * inRads)) / gravity
