@@ -16,7 +16,7 @@ time = (2 * power * math.sin(inRads)) / gravity
 disX = power * time * math.cos(inRads)
 disY = (power * time * math.sin(inRads)) - (gravity * time)
 # magnitude of displacement
-detaDis = math.sqrt(math.pow(disX, 2) + math.pow(disY, 2))
+magDis = math.sqrt(math.pow(disX, 2) + math.pow(disY, 2))
 
 # velocity
 velX = power * math.cos(inRads)
