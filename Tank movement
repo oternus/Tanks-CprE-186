@@ -12,13 +12,31 @@ window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 # loads the background image
 background = pygame.image.load("background.png")
 
+# loads the tank image
+L_tank_sprite_1 = pygame.image.load("tankSprite.png")
+L_tank_sprite_2 = pygame.image.load("tankSprite.png")
+
+# scales the tank image
+L_tank_sprite_1 = pygame.transform.scale(L_tank_sprite_1, (100, 100))
+L_tank_sprite_2 = pygame.transform.scale(L_tank_sprite_2, (100, 100))
+
+# for going left
+R_tank_sprite_1 = pygame.transform.flip(L_tank_sprite_1, True, False)
+R_tank_sprite_2 = pygame.transform.flip(L_tank_sprite_2, True, False)
+
+tank_1_left = True
+tank_1_right = False
+
+tank_2_left = True
+tank_2_right = False
+
 pygame.display.set_caption("Tanks")
   
 # position of tank 
 x_tank1 = 0
-y_tank1 = 425
+y_tank1 = 400
 x_tank2 = 600
-y_tank2 = 425
+y_tank2 = 400
   
 # dimensions of tank 
 width_tank = 80
@@ -53,24 +71,38 @@ while running:
     # movement of tank1
     if (keys[pygame.K_LEFT]) and (x_tank1 > 0) and (x_tank1 - width_tank - speed_tank1 != x_tank2):
         x_tank1 -= speed_tank1
+        tank_1_left = True
+        tank_1_right = False
     if (keys[pygame.K_RIGHT]) and (x_tank1 < (SCREEN_WIDTH - width_tank)) and (x_tank1 + width_tank + speed_tank1 != x_tank2) :
         x_tank1 += speed_tank1
+        tank_1_right = True
+        tank_1_left = False
 
     # movement of tank2
     if (keys[pygame.K_a]) and (x_tank2 > 0) and (x_tank2 - width_tank - speed_tank1 != x_tank1):
         x_tank2 -= speed_tank2
+        tank_2_left = True
+        tank_2_right = False
     if (keys[pygame.K_d]) and (x_tank2 < (SCREEN_WIDTH - width_tank)) and (x_tank2 + width_tank + speed_tank1 != x_tank1):
         x_tank2 += speed_tank2
+        tank_2_right = True
+        tank_2_left = False
 
     # drawing tank onto the window
     # window, colour, coordinates of tank and dimensions of tank 
 
     # tank1
-    pygame.draw.rect(window, (255,0,0), (x_tank1, y_tank1, width_tank, height_tank))
+    if (tank_1_left):
+        window.blit(L_tank_sprite_1, (x_tank1, y_tank1))
+    if (tank_1_right):
+        window.blit(R_tank_sprite_1, (x_tank1, y_tank1))
 
     # tank2
-    pygame.draw.rect(window, (0,0,255), (x_tank2, y_tank2, width_tank, height_tank))
-      
+    if (tank_2_left):
+        window.blit(L_tank_sprite_2, (x_tank2, y_tank2))
+    if (tank_2_right):
+        window.blit(R_tank_sprite_2, (x_tank2, y_tank2))
+    
     # refresh();
     pygame.display.update() 
 
