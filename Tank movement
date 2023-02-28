@@ -1,47 +1,59 @@
 import pygame
 import projectile_physics as physics
+import math
+
+# define the ground by a line with an equation, y =
 
 # initscr();
 pygame.init()
 
-# initial values of window dimensions
+# sprite dimensions
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 650 # max height for background.png is 650 for paint reasons i assume
 TANK_WIDTH = 100
 TANK_HEIGHT = 100
 BULLET_WIDTH = 10
 BULLET_HEIGHT = 10
+BULLET_SPEED = 25
+BULLET_DAMAGE = 10
+
+# timing
 FPS = 60
 clock = pygame.time.Clock()
+
+# Set up the font
+font = pygame.font.Font(None, 30)
+
+# Set up the health bar
+HEALTH = 100
+HEALTH_BAR_WIDTH = 200
+HEALTH_BAR_HEIGHT = 20
+HEALTH_BAR_BORDER_WIDTH = 2
+HEALTH_BAR_COLOR = (255, 0, 0)
+HEALTH_BAR_BACKGROUND_COLOUR = (255, 255, 255)
+HEALTH_BAR_X = SCREEN_WIDTH - HEALTH_BAR_WIDTH - 10
+HEALTH_BAR_Y = 10
 
 window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # loads the background image
 background = pygame.image.load("background.png")
-backgroundRemove = background
-backgroundRemove = pygame.transform.scale(backgroundRemove, (BULLET_WIDTH, BULLET_HEIGHT))
+background_clear = pygame.image.load("sky.png")
+background_clear = pygame.transform.scale(background_clear, (BULLET_WIDTH, BULLET_HEIGHT))
 
-# loads the tank image
+# loads and scales the tank image
 L_tank_sprite_1 = pygame.image.load("tankSprite.png")
 L_tank_sprite_2 = pygame.image.load("tankSprite.png")
-
-# loads the bullet image
-tank_shell = pygame.image.load("bullet.png")
-
-# scaling
 L_tank_sprite_1 = pygame.transform.scale(L_tank_sprite_1, (TANK_WIDTH, TANK_HEIGHT))
 L_tank_sprite_2 = pygame.transform.scale(L_tank_sprite_2, (TANK_WIDTH, TANK_HEIGHT))
+
+# loads and scales the bullet image
+tank_shell = pygame.image.load("bullet.png")
 tank_shell = pygame.transform.scale(tank_shell, (BULLET_WIDTH, BULLET_HEIGHT))
 
-# for going left
+# direction changes
 R_tank_sprite_1 = pygame.transform.flip(L_tank_sprite_1, True, False)
 R_tank_sprite_2 = pygame.transform.flip(L_tank_sprite_2, True, False)
-
-tank_1_left = True
-tank_1_right = False
-
-tank_2_left = True
-tank_2_right = False
 
 pygame.display.set_caption("Tanks")
   
@@ -50,10 +62,10 @@ x_tank1 = 0
 y_tank1 = 400
 x_tank2 = 600
 y_tank2 = 400
-  
-# dimensions of tank 
-width_tank = 80
-height_tank = 50
+tank_1_left = True
+tank_1_right = False
+tank_2_left = True
+tank_2_right = False
   
 # sensitivity to key input
 speed_tank1 = 2
@@ -61,15 +73,22 @@ speed_tank2 = 2
 
 x_tank_shell = x_tank1 + (TANK_WIDTH/2)
 y_tank_shell = y_tank1 + (TANK_HEIGHT/4)
+
+shot_power = 0
+shot_angle = 0
+hit_confirm = False
+
   
 # when the program is running
 running = True
-  
+
 # this loop runs as long as Tanks is running 
 while running:
 
     # everything happens 1/60th of a second
     clock.tick(FPS)
+    num = y_tank1 + (TANK_HEIGHT/4) - 100
+    number = -20
 
     # outputs background to screen
     window.blit(background, (0, 0))
@@ -79,32 +98,37 @@ while running:
         if event.type == pygame.QUIT: 
             running = False
 
+    # Draw the HEALTH bar background
+    pygame.draw.rect(window, HEALTH_BAR_BACKGROUND_COLOUR, (HEALTH_BAR_X, HEALTH_BAR_Y, HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
+
+    # Draw the HEALTH bar
+    pygame.draw.rect(window, HEALTH_BAR_COLOR, (HEALTH_BAR_X, HEALTH_BAR_Y, HEALTH / 100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
+
+    # Draw the HEALTH text
+    health_text = font.render(f"HEALTH: {HEALTH}", True, (0, 0, 0))
+    window.blit(health_text, (10, 10))
+
     keys = pygame.key.get_pressed()
 
-    # and statement prevents out of bounds
-
     # movement of tank1
-    if (keys[pygame.K_LEFT]) and (x_tank1 > 0) and (x_tank1 - width_tank - speed_tank1 != x_tank2):
+    if (keys[pygame.K_LEFT]) and (x_tank1 > 0) and (x_tank1 - TANK_WIDTH - speed_tank1 != x_tank2):
         x_tank1 -= speed_tank1
         tank_1_left = True
         tank_1_right = False
-    if (keys[pygame.K_RIGHT]) and (x_tank1 < (SCREEN_WIDTH - width_tank)) and (x_tank1 + width_tank + speed_tank1 != x_tank2) :
+    if (keys[pygame.K_RIGHT]) and (x_tank1 < (SCREEN_WIDTH - TANK_WIDTH)) and (x_tank1 + TANK_WIDTH + speed_tank1 != x_tank2) :
         x_tank1 += speed_tank1
         tank_1_right = True
         tank_1_left = False
 
     # movement of tank2
-    if (keys[pygame.K_a]) and (x_tank2 > 0) and (x_tank2 - width_tank - speed_tank1 != x_tank1):
+    if (keys[pygame.K_a]) and (x_tank2 > 0) and (x_tank2 - TANK_WIDTH - speed_tank1 != x_tank1):
         x_tank2 -= speed_tank2
         tank_2_left = True
         tank_2_right = False
-    if (keys[pygame.K_d]) and (x_tank2 < (SCREEN_WIDTH - width_tank)) and (x_tank2 + width_tank + speed_tank1 != x_tank1):
+    if (keys[pygame.K_d]) and (x_tank2 < (SCREEN_WIDTH - TANK_WIDTH)) and (x_tank2 + TANK_WIDTH + speed_tank1 != x_tank1):
         x_tank2 += speed_tank2
         tank_2_right = True
         tank_2_left = False
-
-    # drawing tank onto the window
-    # window, colour, coordinates of tank and dimensions of tank 
 
     # tank1
     if (tank_1_left):
@@ -118,14 +142,40 @@ while running:
     if (tank_2_right):
         window.blit(R_tank_sprite_2, (x_tank2, y_tank2))
 
+    # shell
     if (keys[pygame.K_SPACE]):
-        x_tank_shell = x_tank1
-        while (x_tank_shell < x_tank2):
+
+        y_tank_shell = y_tank1 + (TANK_HEIGHT/4)
+        if (tank_1_right):
+            x_tank_shell = x_tank1 + (TANK_WIDTH/2)
+        if (tank_1_left):
+            x_tank_shell = x_tank1 - 35
+
+
+
+        # while shell hasnt hit a tank and isnt out of bounds
+        while (x_tank_shell < x_tank2) and (x_tank_shell > 0) and (x_tank_shell < SCREEN_WIDTH) and (y_tank_shell < SCREEN_HEIGHT):
+            
+            number += 2
+
             pygame.time.delay(20)
-            window.blit(tank_shell, (x_tank_shell, y_tank_shell))
-            window.blit(backgroundRemove, (x_tank_shell - 25, y_tank_shell))
-            pygame.display.update()
-            x_tank_shell += 25
+            y_tank_shell = num + ((number) * (number) * (0.4)) # 0.4 is shot power
+
+            if (tank_1_right):
+                window.blit(tank_shell, (x_tank_shell, y_tank_shell))
+            #    window.blit(background_clear, (x_tank_shell - 25, y_tank_shell))
+                pygame.display.update()
+                x_tank_shell += BULLET_SPEED
+
+            if (tank_1_left):
+                window.blit(tank_shell, (x_tank_shell, y_tank_shell))
+            #    window.blit(background_clear, (x_tank_shell + 25, y_tank_shell))
+                pygame.display.update()
+                x_tank_shell -= BULLET_SPEED
+
+            hit_confirm = (abs(x_tank_shell - x_tank2) < (BULLET_SPEED/2)) and (abs(y_tank_shell - y_tank2) < TANK_HEIGHT)
+            if (hit_confirm):
+                HEALTH -= BULLET_DAMAGE
     
     # refresh();
     pygame.display.update() 
