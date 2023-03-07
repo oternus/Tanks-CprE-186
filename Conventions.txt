@@ -4,6 +4,12 @@ Please follow them.
 Constants (something like SCREEN_WIDTH), are written in ALL CAPS with underscores "_" between words
 The thing you draw on is called window, not background or screen.
 
+RED = (255, 0, 0)
+CYAN = (0,255,255)
+BLACK = (0,0,0)
+ORANGE = (255,165,0)
+WHITE = (0, 0, 0)
+
 # sprite dimensions
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 650 # max height for background.png
