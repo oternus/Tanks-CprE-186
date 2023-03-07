@@ -1,12 +1,11 @@
 import pygame
 import Button
-import random
 
 pygame.init()
 
-width = 600
-height = 600 
-window = pygame.display.set_mode((width, height))
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 650 
+window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 red = (255, 0, 0)
 cyan = (0,255,255)
@@ -17,9 +16,9 @@ myfont = pygame.font.SysFont("Arial", 30)
 
 
 # create buttons
-start_button = Button.Button(0.5 * width - 75, 0.33 * height, "START", 25, cyan, black, 1, width=150, height=50, border=2, border_color=(cyan))
-quit_button = Button.Button(0.5 * width - 75, 0.66 * height, "QUIT", 25, red, black, 1, width=150, height=50, border=2, border_color=(red))
-settings_button = Button.Button(0.5 * width - 75, 0.496 * height, "SETTINGS", 25, orange, black, 1, width=150, height=50, border=2, border_color=(orange))
+start_button = Button.Button(0.5 * SCREEN_WIDTH - 75, 0.33 * SCREEN_HEIGHT, "START", 25, cyan, black, 1, width=150, height=50, border=2, border_color=(cyan))
+quit_button = Button.Button(0.5 * SCREEN_WIDTH - 75, 0.66 * SCREEN_HEIGHT, "QUIT", 25, red, black, 1, width=150, height=50, border=2, border_color=(red))
+settings_button = Button.Button(0.5 * SCREEN_WIDTH - 75, 0.496 * SCREEN_HEIGHT, "SETTINGS", 25, orange, black, 1, width=150, height=50, border=2, border_color=(orange))
 
 running = True
 
@@ -31,11 +30,6 @@ while running:
     #draw background color
     bg = window.fill(black)
 
-
-    #moving tanks
-    # tank_icon = pygame.image.load('T_tank.png').convert
-    # pygame.Surface.blit(tank_icon, (window))
-    # pygame.display.update()
 
     # draw buttons
     start_action = start_button.draw(window)
