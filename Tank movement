@@ -2,20 +2,29 @@ import pygame
 import projectile_physics as physics
 import math
 
-# define the ground by a line with an equation, y =
-
-# initscr();
 pygame.init()
+pygame.display.set_caption("Tanks")
 
 # sprite dimensions
 SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 650 # max height for background.png is 650 for paint reasons i assume
+SCREEN_HEIGHT = 650 # max height for background.png
+GROUND_HEIGHT = 425 # y value of the flat line
+
+window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+# tank dimensions
 TANK_WIDTH = 100
 TANK_HEIGHT = 100
+
+# bullet dimensions
 BULLET_WIDTH = 10
 BULLET_HEIGHT = 10
 BULLET_SPEED = 25
 BULLET_DAMAGE = 10
+
+# explosion dimensions, bullet hitboxes
+EXPLOSION_WIDTH = 50
+EXPLOSION_HEIGHT = 50
 
 # timing
 FPS = 60
@@ -34,8 +43,6 @@ HEALTH_BAR_BACKGROUND_COLOUR = (255, 255, 255)
 HEALTH_BAR_X = SCREEN_WIDTH - HEALTH_BAR_WIDTH - 10
 HEALTH_BAR_Y = 10
 
-window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
 # loads the background image
 background = pygame.image.load("background.png")
 background_clear = pygame.image.load("sky.png")
@@ -50,13 +57,13 @@ L_tank_sprite_2 = pygame.transform.scale(L_tank_sprite_2, (TANK_WIDTH, TANK_HEIG
 # loads and scales the bullet image
 tank_shell = pygame.image.load("bullet.png")
 tank_shell = pygame.transform.scale(tank_shell, (BULLET_WIDTH, BULLET_HEIGHT))
+explosion = pygame.image.load("black_explosion.png")
+explosion = pygame.transform.scale(explosion, (EXPLOSION_WIDTH, EXPLOSION_HEIGHT))
 
 # direction changes
 R_tank_sprite_1 = pygame.transform.flip(L_tank_sprite_1, True, False)
 R_tank_sprite_2 = pygame.transform.flip(L_tank_sprite_2, True, False)
 
-pygame.display.set_caption("Tanks")
-  
 # position of tank 
 x_tank1 = 0
 y_tank1 = 400
@@ -74,8 +81,8 @@ speed_tank2 = 2
 x_tank_shell = x_tank1 + (TANK_WIDTH/2)
 y_tank_shell = y_tank1 + (TANK_HEIGHT/4)
 
-shot_power = 0
-shot_angle = 0
+shot_power = BULLET_SPEED
+shot_angle = 2
 hit_confirm = False
 
   
@@ -87,8 +94,8 @@ while running:
 
     # everything happens 1/60th of a second
     clock.tick(FPS)
-    num = y_tank1 + (TANK_HEIGHT/4) - 100
-    number = -20
+    y_original_tank1 = y_tank1 + (TANK_HEIGHT/4) - 100
+    magic_number = -20
 
     # outputs background to screen
     window.blit(background, (0, 0))
@@ -142,40 +149,77 @@ while running:
     if (tank_2_right):
         window.blit(R_tank_sprite_2, (x_tank2, y_tank2))
 
-    # shell
+
+    # shooting
+
+    angle_select = font.render(f"ANGLE: {shot_angle}", True, (0, 0, 0))
+    window.blit(angle_select, (10, 50))
+
+    power_select = font.render(f"POWER: {shot_power}", True, (0, 0, 0))
+    window.blit(power_select, (10, 80))
+    
+    if (keys[pygame.K_w]):
+        pygame.time.delay(100)
+        shot_angle += 0.1
+        pygame.display.update()
+    if (keys[pygame.K_s]):
+        pygame.time.delay(100)
+        shot_angle -= 0.1
+        pygame.display.update()
+
+    if (keys[pygame.K_k]):
+        pygame.time.delay(100)
+        shot_power += 1
+    if (keys[pygame.K_l]):
+        pygame.time.delay(100)
+        shot_power -= 1
+
     if (keys[pygame.K_SPACE]):
 
-        y_tank_shell = y_tank1 + (TANK_HEIGHT/4)
+        x_tank_shell_old = x_tank_shell
+        y_tank_shell_old = y_tank_shell
+        y_tank_shell = y_tank1 + (TANK_HEIGHT/4) # starting position of shell
         if (tank_1_right):
-            x_tank_shell = x_tank1 + (TANK_WIDTH/2)
+            x_tank_shell = x_tank1 + (TANK_WIDTH/2) # starting position of shell
         if (tank_1_left):
-            x_tank_shell = x_tank1 - 35
-
-
+            x_tank_shell = x_tank1 - (TANK_WIDTH/2)
 
         # while shell hasnt hit a tank and isnt out of bounds
-        while (x_tank_shell < x_tank2) and (x_tank_shell > 0) and (x_tank_shell < SCREEN_WIDTH) and (y_tank_shell < SCREEN_HEIGHT):
+        # this is the movement of the shell
+        while ((x_tank_shell > 0) and (x_tank_shell < SCREEN_WIDTH) and (y_tank_shell < SCREEN_HEIGHT)):
             
-            number += 2
+            y_tank_shell_old = y_tank_shell
+            magic_number += shot_angle
 
-            pygame.time.delay(20)
-            y_tank_shell = num + ((number) * (number) * (0.4)) # 0.4 is shot power
+            pygame.time.delay(60)
+            y_tank_shell = + y_original_tank1 + ((magic_number) * (magic_number) * (0.4)) - 40
 
             if (tank_1_right):
                 window.blit(tank_shell, (x_tank_shell, y_tank_shell))
-            #    window.blit(background_clear, (x_tank_shell - 25, y_tank_shell))
+                window.blit(background_clear, (x_tank_shell_old, y_tank_shell_old))
                 pygame.display.update()
-                x_tank_shell += BULLET_SPEED
+                x_tank_shell_old = x_tank_shell
+                x_tank_shell += shot_power
 
             if (tank_1_left):
                 window.blit(tank_shell, (x_tank_shell, y_tank_shell))
-            #    window.blit(background_clear, (x_tank_shell + 25, y_tank_shell))
+                window.blit(background_clear, (x_tank_shell_old, y_tank_shell_old))
                 pygame.display.update()
-                x_tank_shell -= BULLET_SPEED
+                x_tank_shell_old = x_tank_shell
+                x_tank_shell -= shot_power
 
-            hit_confirm = (abs(x_tank_shell - x_tank2) < (BULLET_SPEED/2)) and (abs(y_tank_shell - y_tank2) < TANK_HEIGHT)
-            if (hit_confirm):
-                HEALTH -= BULLET_DAMAGE
+            hit_confirm = (abs(x_tank_shell - x_tank2) < (TANK_WIDTH/2)) and (abs(y_tank_shell - y_tank2) < (TANK_HEIGHT/5)) # TODO work on tolerances
+            hit_ground = y_tank_shell > GROUND_HEIGHT
+            if (hit_confirm) or (hit_ground):
+                window.blit(background_clear, (x_tank_shell, y_tank_shell))
+                window.blit(explosion, (x_tank_shell, y_tank_shell))
+                pygame.display.update()
+                pygame.time.delay(200)
+                if (hit_confirm):
+                    HEALTH -= BULLET_DAMAGE
+                x_tank_shell = 10000
+                y_tank_shell = 10000
+
     
     # refresh();
     pygame.display.update() 
