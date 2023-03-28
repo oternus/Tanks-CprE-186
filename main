@@ -97,9 +97,10 @@ tank_2_left = True
 tank_2_right = False
   
 # sensitivity to key input
-speed_tank1 = 2
-speed_tank2 = 2
+speed_tank1 = 2.5
+speed_tank2 = 2.5
 
+# default starting points of tank shell
 x_tank_shell = x_tank1 + (TANK_WIDTH/2)
 y_tank_shell = y_tank1 + (TANK_HEIGHT/4)
 
@@ -180,9 +181,9 @@ while start_button_clicked:
             health_tank1 = STARTING_HEALTH
             health_tank2 = STARTING_HEALTH
             x_tank1 = 0
-            y_tank1 = calculate_y(0)
+            y_tank1 = calculate_y(x_tank1)
             x_tank2 = 600
-            y_tank2 = calculate_y(600)
+            y_tank2 = calculate_y(x_tank2)
         else:
             start_button_clicked = 0    # ends the game
     if (health_tank2 <= 0):
