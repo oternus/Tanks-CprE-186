@@ -10,9 +10,10 @@ import pygame
 
 RED = (255, 0, 0)
 CYAN = (0,255,255)
+BLUE = (0, 157, 196)
 BLACK = (0,0,0)
 ORANGE = (255,165,0)
-WHITE = (0, 0, 0)
+WHITE = (255, 255, 255)
 GREEN = (0, 102, 51)
 YELLOW = (192, 192, 192)
 BACKGROUND_WIDTH = 5
