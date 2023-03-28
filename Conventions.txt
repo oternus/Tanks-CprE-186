@@ -12,7 +12,7 @@ ORANGE = (255,165,0)
 WHITE = (0, 0, 0)
 
 # sprite dimensions
-SCREEN_WIDTH = 1000
+SCREEN_WIDTH = 1300
 SCREEN_HEIGHT = 650 # max height for background.png
 GROUND_HEIGHT = 425 # y value of the flat line
 
