@@ -2,6 +2,7 @@ import pygame
 import math
 import Button
 from endScreen import end_Screen
+from Terrain import create_terrain, calculate_y, background_blit
 
 pygame.init()
 pygame.display.set_caption("Tanks")
@@ -63,6 +64,8 @@ ORANGE = (255,165,0)
 WHITE = (0, 0, 0)
 
 # loads the background image
+BACKGROUND_WIDTH = 5
+terrain = None
 background = pygame.image.load("background.png")
 background_clear = pygame.image.load("sky.png")
 background_clear = pygame.transform.scale(background_clear, (BULLET_WIDTH, BULLET_HEIGHT))
@@ -85,9 +88,9 @@ R_tank_sprite_2 = pygame.transform.flip(L_tank_sprite_2, True, False)
 
 # position of tank 
 x_tank1 = 0
-y_tank1 = 400
+y_tank1 = calculate_y(x_tank1)
 x_tank2 = 600
-y_tank2 = 400
+y_tank2 = calculate_y(x_tank2)
 tank_1_left = True
 tank_1_right = False
 tank_2_left = True
@@ -115,8 +118,6 @@ start_button = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.33 * SCREEN_HEIGHT, "ST
 quit_button = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.66 * SCREEN_HEIGHT, "QUIT", 25, RED, BLACK, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(RED))
 settings_button = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.496 * SCREEN_HEIGHT, "SETTINGS", 25, ORANGE, BLACK, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(ORANGE))
 # main_menu_button = Button.Button(0, 0, "BACK", 25, WHITE, BLACK, 1, width=600, height=100, border=2, border_color=(WHITE))
-
-
 
 while running:    
     for event in pygame.event.get():
@@ -146,6 +147,9 @@ while running:
 
     pygame.display.flip()
 
+terrain = create_terrain(3)
+pygame.draw.lines(window, (150, 75, 0), False, terrain, BACKGROUND_WIDTH)
+pygame.display.flip()
 
 # this loop runs as long as Tanks is running 
 while start_button_clicked:
@@ -162,7 +166,8 @@ while start_button_clicked:
     magic_number = -20
 
     # outputs background to screen
-    window.blit(background, (0, 0))
+    # window.blit(background, (0, 0))
+    background_blit(terrain)
 
     # checking if alt+f4 or top right X 
     for event in pygame.event.get():
@@ -175,9 +180,9 @@ while start_button_clicked:
             health_tank1 = STARTING_HEALTH
             health_tank2 = STARTING_HEALTH
             x_tank1 = 0
-            y_tank1 = 400
+            y_tank1 = calculate_y(0)
             x_tank2 = 600
-            y_tank2 = 400
+            y_tank2 = calculate_y(600)
         else:
             start_button_clicked = 0    # ends the game
     if (health_tank2 <= 0):
@@ -185,9 +190,9 @@ while start_button_clicked:
             health_tank1 = STARTING_HEALTH
             health_tank2 = STARTING_HEALTH
             x_tank1 = 0
-            y_tank1 = 400
+            y_tank1 = calculate_y(x_tank1)
             x_tank2 = 600
-            y_tank2 = 400
+            y_tank2 = calculate_y(x_tank2)
         else:
             start_button_clicked = 0    # ends the game
 
@@ -204,20 +209,24 @@ while start_button_clicked:
     # movement of tank1
     if (keys[pygame.K_LEFT]) and (x_tank1 > 0) and (x_tank1 - TANK_WIDTH - speed_tank1 != x_tank2):
         x_tank1 -= speed_tank1
+        y_tank1 = calculate_y(x_tank1)
         tank_1_left = True
         tank_1_right = False
     if (keys[pygame.K_RIGHT]) and (x_tank1 < (SCREEN_WIDTH - TANK_WIDTH)) and (x_tank1 + TANK_WIDTH + speed_tank1 != x_tank2) :
         x_tank1 += speed_tank1
+        y_tank1 = calculate_y(x_tank1)
         tank_1_right = True
         tank_1_left = False
 
     # movement of tank2
     if (keys[pygame.K_a]) and (x_tank2 > 0) and (x_tank2 - TANK_WIDTH - speed_tank1 != x_tank1):
         x_tank2 -= speed_tank2
+        y_tank2 = calculate_y(x_tank2)
         tank_2_left = True
         tank_2_right = False
     if (keys[pygame.K_d]) and (x_tank2 < (SCREEN_WIDTH - TANK_WIDTH)) and (x_tank2 + TANK_WIDTH + speed_tank1 != x_tank1):
         x_tank2 += speed_tank2
+        y_tank2 = calculate_y(x_tank2)
         tank_2_right = True
         tank_2_left = False
 
@@ -295,7 +304,7 @@ while start_button_clicked:
                     x_tank_shell -= shot_power
 
                 hit_confirm = (abs(x_tank_shell - x_tank2) < (TANK_WIDTH/2)) and (abs(y_tank_shell - y_tank2) < (TANK_HEIGHT/5)) # TODO work on tolerances
-                hit_ground = y_tank_shell > GROUND_HEIGHT
+                hit_ground = y_tank_shell > (calculate_y(x_tank_shell) + 50)
 
                 if (hit_confirm) or (hit_ground):
                     # window.blit(background_clear, (x_tank_shell, y_tank_shell))
@@ -343,7 +352,7 @@ while start_button_clicked:
                     x_tank_shell -= shot_power
 
                 hit_confirm = ((abs(x_tank_shell - (x_tank1+25))) < (TANK_WIDTH/2)) and (abs(y_tank_shell - y_tank1) < (TANK_HEIGHT/5)) # TODO work on tolerances
-                hit_ground = y_tank_shell > GROUND_HEIGHT
+                hit_ground = y_tank_shell > (calculate_y(x_tank_shell) + 50)
 
                 if (hit_confirm) or (hit_ground):
                     # window.blit(background_clear, (x_tank_shell, y_tank_shell))
