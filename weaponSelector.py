@@ -12,8 +12,8 @@ GREEN_BOX_Y = 0.85 * SCREEN_HEIGHT
 BOX_HEIGHT = 50
 BOX_WIDTH = 50
 
-def weapon_Selection():
-    window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+def weapon_Selection(window):
+    #window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
     black = (0,0,0)
     white = (255, 255, 255)
@@ -39,7 +39,7 @@ def weapon_Selection():
                 running = False
 
         keys = pygame.key.get_pressed()
-        bg = window.fill(black)
+       #bg = window.fill(black)
 
         # draw buttons
         red_box = red_bullet_box.draw(window)
