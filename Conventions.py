@@ -1,15 +1,21 @@
-These are the conventions we are using for Tanks.
+""" These are the conventions we are using for Tanks.
 Please follow them.
 
 Constants (something like SCREEN_WIDTH), are written in ALL CAPS with underscores "_" between words
 The thing you draw on is called window, NOT background NOT screen.
 Python does not conventionally use camel case. Use num_elements instead of numElements
+ """
+
+import pygame
 
 RED = (255, 0, 0)
 CYAN = (0,255,255)
 BLACK = (0,0,0)
 ORANGE = (255,165,0)
 WHITE = (0, 0, 0)
+GREEN = (0, 102, 51)
+YELLOW = (192, 192, 192)
+BACKGROUND_WIDTH = 5
 
 # sprite dimensions
 SCREEN_WIDTH = 1300
