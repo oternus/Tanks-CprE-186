@@ -240,7 +240,7 @@ while start_button_clicked:
     keys = pygame.key.get_pressed()
     
     # Draws weapons meny
-        if (keys[pygame.K_m]):
+    if (keys[pygame.K_m]):
         m_pressed = True
     if m_pressed:
         red_bullet_box.draw(window)
