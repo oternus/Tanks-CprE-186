@@ -8,7 +8,6 @@ Python does not conventionally use camel case. Use num_elements instead of numEl
 
 import pygame
 import Button
-from Terrain import create_terrain, calculate_y, background_blit
 
 RED = (255, 0, 0)
 CYAN = (0,255,255)
@@ -100,30 +99,6 @@ explosion = pygame.transform.scale(explosion, (EXPLOSION_WIDTH, EXPLOSION_HEIGHT
 # direction changes
 R_tank_sprite_1 = pygame.transform.flip(L_tank_sprite_1, True, False)
 R_tank_sprite_2 = pygame.transform.flip(L_tank_sprite_2, True, False)
-
-# position of tank 
-x_tank1 = 0
-y_tank1 = calculate_y(x_tank1)
-x_tank2 = 600
-y_tank2 = calculate_y(x_tank2)
-tank_1_left = True
-tank_1_right = False
-tank_2_left = True
-tank_2_right = False
-  
-# sensitivity to key input
-speed_tank1 = 2.5
-speed_tank2 = 2.5
-
-# default starting points of tank shell
-x_tank_shell = x_tank1 + (TANK_WIDTH/2)
-y_tank_shell = y_tank1 + (TANK_HEIGHT/4)
-
-shot_power = BULLET_SPEED
-shot_angle = 2
-gun_angle = 0
-hit_confirm = False
-bonus_bullet_damage = 0
 
 # when the program is running
 running = True
