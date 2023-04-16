@@ -1,10 +1,11 @@
-""" These are the conventions we are using for Tanks.
+""" 
+These are the conventions we are using for Tanks.
 Please follow them.
 
 Constants (something like SCREEN_WIDTH), are written in ALL CAPS with underscores "_" between words
 The thing you draw on is called window, NOT background NOT screen.
 Python does not conventionally use camel case. Use num_elements instead of numElements
- """
+"""
 
 import pygame
 import Button
@@ -30,10 +31,10 @@ BUTTON_HEIGHT = 100
 window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # tank dimensions
-TANK_WIDTH = 100
-TANK_HEIGHT = 100
+TANK_WIDTH = 80
+TANK_HEIGHT = 80
 TANK_HITBOX_WIDTH = TANK_WIDTH
-TANK_HITBOX_HEIGHT = TANK_HEIGHT/5
+TANK_HITBOX_HEIGHT = TANK_HEIGHT
 
 # bullet dimensions
 BULLET_WIDTH = 10
@@ -54,6 +55,8 @@ EXPLOSION_HEIGHT = 50
 
 # timing
 FPS = 60
+TIME_DELAY = 200 # milliseconds paused when shot hits
+TIME_DELAY_BETWEEN_BULLETS = 30 # milliseconds between bullet position update
 clock = pygame.time.Clock()
 
 # Set up the font
@@ -61,7 +64,7 @@ font = pygame.font.Font(None, 30)
 
 # Set up the health bar
 STARTING_HEALTH = 100
-HEALTH_BAR_WIDTH = 200
+HEALTH_BAR_WIDTH = 150
 HEALTH_BAR_HEIGHT = 20
 HEALTH_BAR_BORDER_WIDTH = 2
 HEALTH_BAR_COLOR = (255, 0, 0)
@@ -85,8 +88,8 @@ background_clear = pygame.image.load("sky.png")
 background_clear = pygame.transform.scale(background_clear, (BULLET_WIDTH, BULLET_HEIGHT))
 
 # loads and scales the tank image
-L_tank_sprite_1 = pygame.image.load("tankSprite.png")
-L_tank_sprite_2 = pygame.image.load("tankSprite.png")
+L_tank_sprite_1 = pygame.image.load("tank_paint.png")
+L_tank_sprite_2 = pygame.image.load("tank_paint.png")
 L_tank_sprite_1 = pygame.transform.scale(L_tank_sprite_1, (TANK_WIDTH, TANK_HEIGHT))
 L_tank_sprite_2 = pygame.transform.scale(L_tank_sprite_2, (TANK_WIDTH, TANK_HEIGHT))
 
@@ -99,10 +102,6 @@ explosion = pygame.transform.scale(explosion, (EXPLOSION_WIDTH, EXPLOSION_HEIGHT
 # direction changes
 R_tank_sprite_1 = pygame.transform.flip(L_tank_sprite_1, True, False)
 R_tank_sprite_2 = pygame.transform.flip(L_tank_sprite_2, True, False)
-
-# when the program is running
-running = True
-start_is_clicked = False
 
 # create buttons
 start_button = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.33 * SCREEN_HEIGHT, "START", 25, CYAN, BLACK, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(CYAN))
