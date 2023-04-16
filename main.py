@@ -19,8 +19,8 @@ BUTTON_HEIGHT = 100
 window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # tank dimensions
-TANK_WIDTH = 100
-TANK_HEIGHT = 100
+TANK_WIDTH = 80
+TANK_HEIGHT = 80
 TANK_HITBOX_WIDTH = TANK_WIDTH
 TANK_HITBOX_HEIGHT = TANK_HEIGHT/5
 
@@ -43,6 +43,8 @@ EXPLOSION_HEIGHT = 50
 
 # timing
 FPS = 60
+TIME_DELAY = 400 # milliseconds paused when shot hits
+TIME_DELAY_BETWEEN_BULLETS = 30 # milliseconds between bullet position update
 clock = pygame.time.Clock()
 
 # Set up the font
@@ -50,7 +52,7 @@ font = pygame.font.Font(None, 30)
 
 # Set up the health bar
 STARTING_HEALTH = 100
-HEALTH_BAR_WIDTH = 200
+HEALTH_BAR_WIDTH = 150
 HEALTH_BAR_HEIGHT = 20
 HEALTH_BAR_BORDER_WIDTH = 2
 HEALTH_BAR_COLOR = (255, 0, 0)
@@ -59,18 +61,6 @@ HEALTH_BAR_X = SCREEN_WIDTH - HEALTH_BAR_WIDTH - 10
 HEALTH_BAR_Y = 10
 health_tank1 = STARTING_HEALTH
 health_tank2 = STARTING_HEALTH
-
-# Sets up the weapons menu
-WEAPON_ONE_X = 0.5 * SCREEN_WIDTH - 80
-WEAPON_ONE_Y = 0.85 * SCREEN_HEIGHT
-WEAPON_TWO_X = 0.55 * SCREEN_WIDTH - 95
-WEAPON_TWO_Y = 0.85 * SCREEN_HEIGHT
-BOX_HEIGHT = 50
-BOX_WIDTH = 50
-
-red_box_pressed = True
-green_box_pressed = False
-m_pressed = False
 
 RED = (255, 0, 0)
 CYAN = (0,255,255)
@@ -86,8 +76,8 @@ background_clear = pygame.image.load("sky.png")
 background_clear = pygame.transform.scale(background_clear, (BULLET_WIDTH, BULLET_HEIGHT))
 
 # loads and scales the tank image
-L_tank_sprite_1 = pygame.image.load("tankSprite.png")
-L_tank_sprite_2 = pygame.image.load("tankSprite.png")
+L_tank_sprite_1 = pygame.image.load("tank_paint.png")
+L_tank_sprite_2 = pygame.image.load("tank_paint.png")
 L_tank_sprite_1 = pygame.transform.scale(L_tank_sprite_1, (TANK_WIDTH, TANK_HEIGHT))
 L_tank_sprite_2 = pygame.transform.scale(L_tank_sprite_2, (TANK_WIDTH, TANK_HEIGHT))
 
@@ -124,6 +114,7 @@ shot_angle = 2
 gun_angle = 0
 hit_confirm = False
 bonus_bullet_damage = 0
+GUN_ROTATION_SPEED = 5
 
 # when the program is running
 running = True
@@ -164,29 +155,12 @@ while running:
     pygame.display.flip()
 
 terrain = create_terrain(3)
-
 pygame.draw.lines(window, (150, 75, 0), False, terrain, BACKGROUND_WIDTH)
 pygame.display.flip()
 
-# weapons menu buttons
-red_bullet = pygame.image.load("bullet.png")
-red_bullet = pygame.transform.scale(red_bullet, (BOX_WIDTH - 10, BOX_HEIGHT - 10))
-red_bullet_box = Button.Button(WEAPON_ONE_X, WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
-red_box_outline = Button.Button(WEAPON_ONE_X, WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
-
-green_bullet = pygame.image.load("greenBullet.png")
-green_bullet = pygame.transform.scale(green_bullet, (BOX_HEIGHT - 10, BOX_HEIGHT - 10))
-green_bullet_box = Button.Button(WEAPON_TWO_X, WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
-green_box_outline = Button.Button(WEAPON_TWO_X, WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
-
-white_outline_g = Button.Button(WEAPON_TWO_X, WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
-white_outline_r = Button.Button(WEAPON_ONE_X, WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
-weapon_picked = red_bullet
-tank_shell = weapon_picked
-
 # this loop runs as long as Tanks is running 
 while start_button_clicked:
-    
+
     main_menu_action = False
     if main_menu_action:
         start_button_clicked = False
@@ -229,75 +203,36 @@ while start_button_clicked:
         else:
             start_button_clicked = 0    # ends the game
 
-    # Draw the HEALTH bar background
-    pygame.draw.rect(window, HEALTH_BAR_BACKGROUND_COLOUR, (HEALTH_BAR_X, HEALTH_BAR_Y, HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
-    pygame.draw.rect(window, HEALTH_BAR_BACKGROUND_COLOUR, (HEALTH_BAR_X - 1080, HEALTH_BAR_Y, HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
-
     # Draw the HEALTH bar
-    pygame.draw.rect(window, HEALTH_BAR_COLOR, (HEALTH_BAR_X, HEALTH_BAR_Y, health_tank2 / 100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
-    pygame.draw.rect(window, HEALTH_BAR_COLOR, (HEALTH_BAR_X - 1080, HEALTH_BAR_Y, health_tank1 / 100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
+    pygame.draw.rect(window, HEALTH_BAR_COLOR, (x_tank1, y_tank1 - 30, health_tank1/100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
+    pygame.draw.rect(window, HEALTH_BAR_COLOR, (x_tank2, y_tank2 - 30, health_tank2/100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
 
     keys = pygame.key.get_pressed()
-    
-    # Draws weapons meny
-    if (keys[pygame.K_m]):
-        m_pressed = True
-    if m_pressed:
-        red_bullet_box.draw(window)
-        window.blit(red_bullet, (WEAPON_ONE_X + 5, WEAPON_ONE_Y + 5))
 
-        green_bullet_box.draw(window)
-        window.blit(green_bullet, (WEAPON_TWO_X + 5, WEAPON_TWO_Y + 5))
-        
-        if (keys[pygame.K_1]):
-            red_box_pressed = True
-            green_box_pressed = False
-            weapon_picked = red_bullet
-
-            
-        elif (keys[pygame.K_2]):
-            red_box_pressed = False
-            green_box_pressed = True
-            weapon_picked = green_bullet
-
-        if red_box_pressed:
-            red_outline = red_box_outline.draw(window)
-            red_draw = window.blit(red_bullet, (WEAPON_ONE_X + 5, WEAPON_ONE_Y + 5))
-
-            white_outline = white_outline_g.draw(window)
-            green_draw = window.blit(green_bullet, (WEAPON_TWO_X + 5, WEAPON_TWO_Y + 5))
-
-        if green_box_pressed:
-            green_outline = green_box_outline.draw(window)
-            green_draw = window.blit(green_bullet, (WEAPON_TWO_X + 5, WEAPON_TWO_Y + 5))
-
-            white_outline = white_outline_r.draw(window)
-            red_draw = window.blit(red_bullet, (WEAPON_ONE_X + 5, WEAPON_ONE_Y + 5))
-
-    if (keys[pygame.K_l]):
-        m_pressed = False
-
-    tank_shell = pygame.transform.scale(weapon_picked, (BULLET_WIDTH, BULLET_HEIGHT))
-    
     # movement of tank1
-    if (keys[pygame.K_LEFT]) and (x_tank1 > 0) and (x_tank1 - TANK_WIDTH - speed_tank1 != x_tank2):
+    if (keys[pygame.K_a]) and (x_tank1 > 0) and (x_tank1 - TANK_WIDTH - speed_tank1 != x_tank2):
         x_tank1 -= speed_tank1
         y_tank1 = calculate_y(x_tank1)
         tank_1_left = True
         tank_1_right = False
-    if (keys[pygame.K_RIGHT]) and (x_tank1 < (SCREEN_WIDTH - TANK_WIDTH)) and (x_tank1 + TANK_WIDTH + speed_tank1 != x_tank2) :
+    if (keys[pygame.K_d]) and (x_tank1 < (SCREEN_WIDTH - TANK_WIDTH)) and (x_tank1 + TANK_WIDTH + speed_tank1 != x_tank2) :
         x_tank1 += speed_tank1
         y_tank1 = calculate_y(x_tank1)
         tank_1_right = True
         tank_1_left = False
 
+    if keys[pygame.K_w]:
+        gun_angle += GUN_ROTATION_SPEED
+    elif keys[pygame.K_s]:
+        gun_angle -= GUN_ROTATION_SPEED
+
     # movement of tank2
-    if (keys[pygame.K_a]) and (x_tank2 > 0) and (x_tank2 - TANK_WIDTH - speed_tank1 != x_tank1):
+    if (keys[pygame.K_LEFT]) and (x_tank2 > 0) and (x_tank2 - TANK_WIDTH - speed_tank1 != x_tank1):
         x_tank2 -= speed_tank2
         y_tank2 = calculate_y(x_tank2)
         tank_2_left = True
         tank_2_right = False
-    if (keys[pygame.K_d]) and (x_tank2 < (SCREEN_WIDTH - TANK_WIDTH)) and (x_tank2 + TANK_WIDTH + speed_tank1 != x_tank1):
+    if (keys[pygame.K_RIGHT]) and (x_tank2 < (SCREEN_WIDTH - TANK_WIDTH)) and (x_tank2 + TANK_WIDTH + speed_tank1 != x_tank1):
         x_tank2 += speed_tank2
         y_tank2 = calculate_y(x_tank2)
         tank_2_right = True
@@ -306,14 +241,26 @@ while start_button_clicked:
     # tank1
     if (tank_1_left):
         window.blit(L_tank_sprite_1, (x_tank1, y_tank1))
+        pygame.draw.line(window, BLACK, (x_tank1 + (TANK_WIDTH/2), y_tank1),
+                     (x_tank1 + (TANK_WIDTH/2) + math.cos(math.radians(gun_angle)) * 50,
+                      y_tank1 - math.sin(math.radians(gun_angle)) * 50), 3)
     if (tank_1_right):
         window.blit(R_tank_sprite_1, (x_tank1, y_tank1))
+        pygame.draw.line(window, BLACK, (x_tank1 + (TANK_WIDTH/2), y_tank1),
+                     (x_tank1 + (TANK_WIDTH/2) + math.cos(math.radians(gun_angle)) * 50,
+                      y_tank1 - math.sin(math.radians(gun_angle)) * 50), 3)
 
     # tank2
     if (tank_2_left):
         window.blit(L_tank_sprite_2, (x_tank2, y_tank2))
+        pygame.draw.line(window, BLACK, (x_tank2 + (TANK_WIDTH/2), y_tank2),
+                     (x_tank2 + (TANK_WIDTH/2) + math.cos(math.radians(gun_angle)) * 50,
+                      y_tank2 - math.sin(math.radians(gun_angle)) * 50), 3)
     if (tank_2_right):
         window.blit(R_tank_sprite_2, (x_tank2, y_tank2))
+        pygame.draw.line(window, BLACK, (x_tank2 + (TANK_WIDTH/2), y_tank2),
+                     (x_tank2 + (TANK_WIDTH/2) + math.cos(math.radians(gun_angle)) * 50,
+                      y_tank2 - math.sin(math.radians(gun_angle)) * 50), 3)
 
 
     # shooting
@@ -322,6 +269,13 @@ while start_button_clicked:
 
     power_select = font.render(f"POWER: {shot_power}", True, (0, 0, 0))
     window.blit(power_select, (SCREEN_WIDTH/2 - 50, 40))
+
+    
+
+
+    if (keys[pygame.K_TAB]):
+        jump = 100
+
 
     if (keys[pygame.K_w]) and (shot_angle < MAX_SHOT_ANGLE):
         pygame.time.delay(100)
@@ -340,8 +294,6 @@ while start_button_clicked:
         shot_power -= 1
 
     # hitbox visualization
-    pygame.draw.rect(window, HEALTH_BAR_COLOR, (x_tank1, y_tank1, TANK_HITBOX_WIDTH, TANK_HITBOX_HEIGHT))
-    pygame.draw.rect(window, HEALTH_BAR_COLOR, (x_tank2, y_tank2, TANK_HITBOX_WIDTH, TANK_HITBOX_HEIGHT))
     pygame.display.flip()
     #pygame.draw.rect(window, HEALTH_BAR_COLOR, (HEALTH_BAR_X, HEALTH_BAR_Y, health_tank2 / 100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
 
@@ -365,10 +317,11 @@ while start_button_clicked:
                 y_tank_shell_old = y_tank_shell
                 magic_number += shot_angle
 
-                pygame.time.delay(40)
+                pygame.time.delay(TIME_DELAY_BETWEEN_BULLETS)
                 y_tank_shell = + y_original_tank1 + ((magic_number) * (magic_number) * (0.4)) - 40
 
                 if (tank_1_right):
+                    #pygame.draw.circle(window, (GREEN), (x_tank_shell, y_tank_shell), BULLET_WIDTH, 0)
                     window.blit(tank_shell, (x_tank_shell, y_tank_shell))
                     window.blit(background_clear, (x_tank_shell_old, y_tank_shell_old))
                     pygame.display.update()
@@ -383,7 +336,7 @@ while start_button_clicked:
                     x_tank_shell -= shot_power
 
                 shell_to_tank_x = abs(x_tank_shell - x_tank2)
-                shell_to_tank_y = abs(y_tank_shell - y_tank2)
+                shell_to_tank_y = abs(y_tank_shell - (y_tank2+50))
 
                 hit_confirm = tank_hit_detection(shell_to_tank_x, shell_to_tank_y)
                 hit_ground = y_tank_shell > (calculate_y(x_tank_shell) + 50)
@@ -392,7 +345,7 @@ while start_button_clicked:
                     # window.blit(background_clear, (x_tank_shell, y_tank_shell))
                     window.blit(explosion, (x_tank_shell, y_tank_shell))
                     pygame.display.update()
-                    pygame.time.delay(200)
+                    pygame.time.delay(TIME_DELAY)
                     if (hit_confirm):
                         health_tank2 -= (BULLET_DAMAGE + bonus_bullet_damage)
                     x_tank_shell = 10000
@@ -416,7 +369,7 @@ while start_button_clicked:
                 y_tank_shell_old = y_tank_shell
                 magic_number += shot_angle
 
-                pygame.time.delay(40)
+                pygame.time.delay(TIME_DELAY_BETWEEN_BULLETS)
                 y_tank_shell = + y_original_tank2 + ((magic_number) * (magic_number) * (0.4)) - 40
 
                 if (tank_2_right):
@@ -434,16 +387,16 @@ while start_button_clicked:
                     x_tank_shell -= shot_power
 
                 shell_to_tank_x = abs(x_tank_shell - x_tank1)
-                shell_to_tank_y = abs(y_tank_shell - y_tank1)
+                shell_to_tank_y = abs(y_tank_shell - (y_tank1+50))
 
-                hit_confirm = tank_hit_detection(shell_to_tank_x, shell_to_tank_y) # TODO work on tolerances
+                hit_confirm = tank_hit_detection(shell_to_tank_x, shell_to_tank_y)
                 hit_ground = y_tank_shell > (calculate_y(x_tank_shell) + 50)
 
                 if (hit_confirm) or (hit_ground):
                     # window.blit(background_clear, (x_tank_shell, y_tank_shell))
                     window.blit(explosion, (x_tank_shell, y_tank_shell))
                     pygame.display.update()
-                    pygame.time.delay(200)
+                    pygame.time.delay(TIME_DELAY)
                     if (hit_confirm):
                         health_tank1 -= (BULLET_DAMAGE + bonus_bullet_damage)
                     x_tank_shell = 10000
