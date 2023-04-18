@@ -69,17 +69,25 @@ HEALTH_BAR_Y = 10
 health_tank1 = STARTING_HEALTH
 health_tank2 = STARTING_HEALTH
 
-# Sets up the weapons menu
-WEAPON_ONE_X = 0.5 * SCREEN_WIDTH - 80
-WEAPON_ONE_Y = 0.85 * SCREEN_HEIGHT
-WEAPON_TWO_X = 0.55 * SCREEN_WIDTH - 95
-WEAPON_TWO_Y = 0.85 * SCREEN_HEIGHT
+# Sets up the weapons menu LEFT
+L_WEAPON_ONE_X = 0.1 * SCREEN_WIDTH - 80
+L_WEAPON_ONE_Y = 0.18 * SCREEN_HEIGHT
+L_WEAPON_TWO_X = 0.15 * SCREEN_WIDTH - 95
+L_WEAPON_TWO_Y = 0.18 * SCREEN_HEIGHT
 BOX_HEIGHT = 50
 BOX_WIDTH = 50
 
-red_box_pressed = True
-green_box_pressed = False
-m_pressed = False
+L_red_box_pressed = True
+L_green_box_pressed = False
+
+# Sets up the weapons menu RIGHT
+R_WEAPON_ONE_X = 0.94 * SCREEN_WIDTH - 80
+R_WEAPON_ONE_Y = 0.18 * SCREEN_HEIGHT
+R_WEAPON_TWO_X = .99 * SCREEN_WIDTH - 95
+R_WEAPON_TWO_Y = 0.18 * SCREEN_HEIGHT
+
+R_red_box_pressed = True
+R_green_box_pressed = False
 
 RED = (255, 0, 0)
 CYAN = (0,255,255)
@@ -181,18 +189,33 @@ pygame.display.flip()
 # weapons menu buttons
 red_bullet = pygame.image.load("bullet.png")
 red_bullet = pygame.transform.scale(red_bullet, (BOX_WIDTH - 10, BOX_HEIGHT - 10))
-red_bullet_box = Button.Button(WEAPON_ONE_X, WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
-red_box_outline = Button.Button(WEAPON_ONE_X, WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
 
 green_bullet = pygame.image.load("greenBullet.png")
 green_bullet = pygame.transform.scale(green_bullet, (BOX_HEIGHT - 10, BOX_HEIGHT - 10))
-green_bullet_box = Button.Button(WEAPON_TWO_X, WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
-green_box_outline = Button.Button(WEAPON_TWO_X, WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
 
-white_outline_g = Button.Button(WEAPON_TWO_X, WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
-white_outline_r = Button.Button(WEAPON_ONE_X, WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
-weapon_picked = red_bullet
-tank_shell = weapon_picked
+#LEFT
+L_red_bullet_box = Button.Button(L_WEAPON_ONE_X, L_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+L_red_box_outline = Button.Button(L_WEAPON_ONE_X, L_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
+L_white_outline_r = Button.Button(L_WEAPON_ONE_X, L_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+
+L_green_bullet_box = Button.Button(L_WEAPON_TWO_X, L_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+L_green_box_outline = Button.Button(L_WEAPON_TWO_X, L_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
+L_white_outline_g = Button.Button(L_WEAPON_TWO_X, L_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+
+L_weapon_picked = red_bullet
+L_tank_shell = L_weapon_picked
+
+#RIGHT
+R_red_bullet_box = Button.Button(R_WEAPON_ONE_X, R_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+R_red_box_outline = Button.Button(R_WEAPON_ONE_X, R_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
+R_white_outline_r = Button.Button(R_WEAPON_ONE_X, R_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+
+R_green_bullet_box = Button.Button(R_WEAPON_TWO_X, R_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+R_green_box_outline = Button.Button(R_WEAPON_TWO_X, R_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
+R_white_outline_g = Button.Button(R_WEAPON_TWO_X, R_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+
+R_weapon_picked = red_bullet
+R_tank_shell = R_weapon_picked
 
 # this loop runs as long as Tanks is running 
 while start_button_clicked:
@@ -249,46 +272,70 @@ while start_button_clicked:
 
     keys = pygame.key.get_pressed()
     
-    # Draws weapons menu
-    if (keys[pygame.K_m]):
-        m_pressed = True
-    if m_pressed:
-        red_bullet_box.draw(window)
-        window.blit(red_bullet, (WEAPON_ONE_X + 5, WEAPON_ONE_Y + 5))
+    # Draws weapons menu LEFT
+    L_red_bullet_box.draw(window)
+    window.blit(red_bullet, (L_WEAPON_ONE_X + 5, L_WEAPON_ONE_Y + 5))
 
-        green_bullet_box.draw(window)
-        window.blit(green_bullet, (WEAPON_TWO_X + 5, WEAPON_TWO_Y + 5))
+    L_green_bullet_box.draw(window)
+    window.blit(green_bullet, (L_WEAPON_TWO_X + 5, L_WEAPON_TWO_Y + 5))
+    
+    if (keys[pygame.K_1]):
+        L_red_box_pressed = True
+        L_green_box_pressed = False
+        L_weapon_picked = red_bullet
         
-        if (keys[pygame.K_1]):
-            red_box_pressed = True
-            green_box_pressed = False
-            weapon_picked = red_bullet
+    elif (keys[pygame.K_2]):
+        L_red_box_pressed = False
+        L_green_box_pressed = True
+        L_weapon_picked = green_bullet
 
-            
-        elif (keys[pygame.K_2]):
-            red_box_pressed = False
-            green_box_pressed = True
-            weapon_picked = green_bullet
+    if L_red_box_pressed:
+        L_red_outline = L_red_box_outline.draw(window)
+        L_red_draw = window.blit(red_bullet, (L_WEAPON_ONE_X + 5, L_WEAPON_ONE_Y + 5))
 
-        if red_box_pressed:
-            red_outline = red_box_outline.draw(window)
-            red_draw = window.blit(red_bullet, (WEAPON_ONE_X + 5, WEAPON_ONE_Y + 5))
+        L_white_outline = L_white_outline_g.draw(window)
+        L_green_draw = window.blit(green_bullet, (L_WEAPON_TWO_X + 5, L_WEAPON_TWO_Y + 5))
 
-            white_outline = white_outline_g.draw(window)
-            green_draw = window.blit(green_bullet, (WEAPON_TWO_X + 5, WEAPON_TWO_Y + 5))
+    if L_green_box_pressed:
+        L_green_outline = L_green_box_outline.draw(window)
+        L_green_draw = window.blit(green_bullet, (L_WEAPON_TWO_X + 5, L_WEAPON_TWO_Y + 5))
 
-        if green_box_pressed:
-            green_outline = green_box_outline.draw(window)
-            green_draw = window.blit(green_bullet, (WEAPON_TWO_X + 5, WEAPON_TWO_Y + 5))
+        L_white_outline = L_white_outline_r.draw(window)
+        L_red_draw = window.blit(red_bullet, (L_WEAPON_ONE_X + 5, L_WEAPON_ONE_Y + 5))
 
-            white_outline = white_outline_r.draw(window)
-            red_draw = window.blit(red_bullet, (WEAPON_ONE_X + 5, WEAPON_ONE_Y + 5))
+    # Draws weapons menu RIGHT
+    R_red_bullet_box.draw(window)
+    window.blit(red_bullet, (R_WEAPON_ONE_X + 5, R_WEAPON_ONE_Y + 5))
 
-    if (keys[pygame.K_l]):
-        m_pressed = False
+    R_green_bullet_box.draw(window)
+    window.blit(green_bullet, (R_WEAPON_TWO_X + 5, R_WEAPON_TWO_Y + 5))
+    
+    if (keys[pygame.K_9]):
+        R_red_box_pressed = True
+        R_green_box_pressed = False
+        R_weapon_picked = red_bullet
         
-    tank_shell = pygame.transform.scale(weapon_picked, (BULLET_WIDTH, BULLET_HEIGHT))
-        
+    elif (keys[pygame.K_0]):
+        R_red_box_pressed = False
+        R_green_box_pressed = True
+        R_weapon_picked = green_bullet
+
+    if R_red_box_pressed:
+        R_red_outline = R_red_box_outline.draw(window)
+        R_red_draw = window.blit(red_bullet, (R_WEAPON_ONE_X + 5, R_WEAPON_ONE_Y + 5))
+
+        R_white_outline = R_white_outline_g.draw(window)
+        R_green_draw = window.blit(green_bullet, (R_WEAPON_TWO_X + 5, R_WEAPON_TWO_Y + 5))
+
+    if R_green_box_pressed:
+        R_green_outline = R_green_box_outline.draw(window)
+        R_green_draw = window.blit(green_bullet, (R_WEAPON_TWO_X + 5, R_WEAPON_TWO_Y + 5))
+
+        R_white_outline = R_white_outline_r.draw(window)
+        R_red_draw = window.blit(red_bullet, (R_WEAPON_ONE_X + 5, R_WEAPON_ONE_Y + 5))
+    R_tank_shell = pygame.transform.scale(R_weapon_picked, (BULLET_WIDTH, BULLET_HEIGHT))
+    L_tank_shell = pygame.transform.scale(L_weapon_picked, (BULLET_WIDTH, BULLET_HEIGHT))
+         
     # movement of tank1
     if (keys[pygame.K_a]) and (x_tank1 > 0) and (x_tank1 - TANK_WIDTH - speed_tank1 != x_tank2):
         x_tank1 -= speed_tank1
@@ -404,14 +451,14 @@ while start_button_clicked:
 
                 if (tank_1_right):
                     #pygame.draw.circle(window, (GREEN), (x_tank_shell, y_tank_shell), BULLET_WIDTH, 0)
-                    window.blit(tank_shell, (x_tank_shell, y_tank_shell))
+                    window.blit(L_tank_shell, (x_tank_shell, y_tank_shell))
                     window.blit(background_clear, (x_tank_shell_old, y_tank_shell_old))
                     pygame.display.update()
                     x_tank_shell_old = x_tank_shell
                     x_tank_shell += shot_power
 
                 if (tank_1_left):
-                    window.blit(tank_shell, (x_tank_shell, y_tank_shell))
+                    window.blit(L_tank_shell, (x_tank_shell, y_tank_shell))
                     window.blit(background_clear, (x_tank_shell_old, y_tank_shell_old))
                     pygame.display.update()
                     x_tank_shell_old = x_tank_shell
@@ -455,14 +502,14 @@ while start_button_clicked:
                 y_tank_shell = + y_original_tank2 + ((magic_number) * (magic_number) * (0.4)) - 40
 
                 if (tank_2_right):
-                    window.blit(tank_shell, (x_tank_shell, y_tank_shell))
+                    window.blit(R_tank_shell, (x_tank_shell, y_tank_shell))
                     window.blit(background_clear, (x_tank_shell_old, y_tank_shell_old))
                     pygame.display.update()
                     x_tank_shell_old = x_tank_shell
                     x_tank_shell += shot_power
 
                 if (tank_2_left):
-                    window.blit(tank_shell, (x_tank_shell, y_tank_shell))
+                    window.blit(R_tank_shell, (x_tank_shell, y_tank_shell))
                     window.blit(background_clear, (x_tank_shell_old, y_tank_shell_old))
                     pygame.display.update()
                     x_tank_shell_old = x_tank_shell
