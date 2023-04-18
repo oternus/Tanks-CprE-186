@@ -83,8 +83,8 @@ background_clear = pygame.image.load("sky.png")
 background_clear = pygame.transform.scale(background_clear, (BULLET_WIDTH, BULLET_HEIGHT))
 
 # loads and scales the tank image
-L_tank_sprite_1 = pygame.image.load("tank_paint.png")
-L_tank_sprite_2 = pygame.image.load("tank_paint.png")
+L_tank_sprite_1 = pygame.image.load("tank_paint4.png")
+L_tank_sprite_2 = pygame.image.load("tank_paint4.png")
 L_tank_sprite_1 = pygame.transform.scale(L_tank_sprite_1, (TANK_WIDTH, TANK_HEIGHT))
 L_tank_sprite_2 = pygame.transform.scale(L_tank_sprite_2, (TANK_WIDTH, TANK_HEIGHT))
 
@@ -191,8 +191,7 @@ while start_button_clicked:
 
 
     if (tank_2_left or tank_2_right or tank_1_left or tank_1_right):
-                    DISTANCE_BETWEEN = calculate_distance(x_tank1, y_tank1, x_tank2, y_tank2)
-                    pygame.display.update()
+        DISTANCE_BETWEEN = calculate_distance(x_tank1, y_tank1, x_tank2, y_tank2)
 
     # game has ended
     if (health_tank1 <= 0):
