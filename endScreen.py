@@ -19,7 +19,7 @@ def end_Screen(winner):
     orange = (255,165,0)
     white = (255,255, 255)
 
-    winnerBox = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.00 * SCREEN_HEIGHT + 50, f"{winner} WON", 30, white, black, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT+50, border=2, border_color=(white))
+    winnerBox = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.00 * SCREEN_HEIGHT + 50, f"{winner} WON", 100, white, black, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT+100, border=2, border_color=(white))
 
     # create buttons
     start_button = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.25 * SCREEN_HEIGHT + 100, "PLAY AGAIN", 25, cyan, black, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(cyan))
