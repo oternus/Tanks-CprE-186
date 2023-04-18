@@ -1,4 +1,4 @@
 # Tanks-CprE-186
 Tanks game made in python.
-Using pygame 
-https://www.pygame.org/docs/ is where we reference methods
+Using the pygame library.
+https://www.pygame.org/docs/ method references
