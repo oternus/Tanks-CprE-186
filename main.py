@@ -8,6 +8,13 @@ from Collisions import *
 pygame.init()
 pygame.display.set_caption("Tanks")
 
+def calculate_distance(x1, y1, x2, y2):
+        """
+        This function takes in the x and y coordinates of two points and calculates the distance between them.
+        """
+        distance = ((x2 - x1)**2 + (y2 - y1)**2)**0.5
+        return int(distance)
+
 # sprite dimensions
 SCREEN_WIDTH = 1300 # change to 1000 if problems
 SCREEN_HEIGHT = 650 # max height for background.png
@@ -115,6 +122,7 @@ gun_angle = 0
 hit_confirm = False
 bonus_bullet_damage = 0
 GUN_ROTATION_SPEED = 5
+DISTANCE_BETWEEN = calculate_distance(x_tank1, y_tank1, x_tank2, y_tank2)
 
 # when the program is running
 running = True
@@ -180,6 +188,11 @@ while start_button_clicked:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: 
             start_button_clicked = False
+
+
+    if (tank_2_left or tank_2_right or tank_1_left or tank_1_right):
+                    DISTANCE_BETWEEN = calculate_distance(x_tank1, y_tank1, x_tank2, y_tank2)
+                    pygame.display.update()
 
     # game has ended
     if (health_tank1 <= 0):
@@ -270,6 +283,8 @@ while start_button_clicked:
     power_select = font.render(f"POWER: {shot_power}", True, (0, 0, 0))
     window.blit(power_select, (SCREEN_WIDTH/2 - 50, 40))
 
+    Distance_select = font.render(f"DISTANCE: {DISTANCE_BETWEEN}", True, (0, 0, 0))
+    window.blit(Distance_select, (SCREEN_WIDTH/2 - 50, 60))
     
 
 
@@ -385,6 +400,7 @@ while start_button_clicked:
                     pygame.display.update()
                     x_tank_shell_old = x_tank_shell
                     x_tank_shell -= shot_power
+
 
                 shell_to_tank_x = abs(x_tank_shell - x_tank1)
                 shell_to_tank_y = abs(y_tank_shell - (y_tank1+50))
