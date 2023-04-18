@@ -12,7 +12,7 @@ GREEN_BOX_Y = 0.85 * SCREEN_HEIGHT
 BOX_HEIGHT = 50
 BOX_WIDTH = 50
 
-window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+#window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 black = (0,0,0)
 white = (255, 255, 255)
@@ -36,13 +36,13 @@ keys = pygame.key.get_pressed()
 #bg = window.fill(black)
 
 # draw buttons
-red_box = red_bullet_box.draw(window)
-red_draw = window.blit(red_bullet, (RED_BOX_X + 5, RED_BOX_Y + 5))
+#red_box = red_bullet_box.draw(window)
+#red_draw = window.blit(red_bullet, (RED_BOX_X + 5, RED_BOX_Y + 5))
 
-green_box = green_bullet_box.draw(window)
-green_draw = window.blit(green_bullet, (GREEN_BOX_X + 5, GREEN_BOX_Y + 5))
+#green_box = green_bullet_box.draw(window)
+#green_draw = window.blit(green_bullet, (GREEN_BOX_X + 5, GREEN_BOX_Y + 5))
 
-# weapon selection
+""" # weapon selection
 if (keys[pygame.K_1]):
     red_box_pressed = True
     green_box_pressed = False
@@ -52,11 +52,11 @@ elif (keys[pygame.K_2]):
     green_box_pressed = True
 
 if red_box_pressed:
-    red_outline = red_box_outline.draw(window)
-    red_draw = window.blit(red_bullet, (RED_BOX_X + 5, RED_BOX_Y + 5))
+ #   red_outline = red_box_outline.draw(window)
+ #   red_draw = window.blit(red_bullet, (RED_BOX_X + 5, RED_BOX_Y + 5))
 
 if green_box_pressed:
     green_outline = green_box_outline.draw(window)
-    green_draw = window.blit(green_bullet, (GREEN_BOX_X + 5, GREEN_BOX_Y + 5))
+    green_draw = window.blit(green_bullet, (GREEN_BOX_X + 5, GREEN_BOX_Y + 5)) """
 
 #pygame.display.flip()
