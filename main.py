@@ -286,6 +286,9 @@ while start_button_clicked:
 
     if (keys[pygame.K_l]):
         m_pressed = False
+        
+    tank_shell = pygame.transform.scale(weapon_picked, (BULLET_WIDTH, BULLET_HEIGHT))
+        
     # movement of tank1
     if (keys[pygame.K_a]) and (x_tank1 > 0) and (x_tank1 - TANK_WIDTH - speed_tank1 != x_tank2):
         x_tank1 -= speed_tank1
