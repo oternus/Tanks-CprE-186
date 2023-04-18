@@ -107,3 +107,11 @@ R_tank_sprite_2 = pygame.transform.flip(L_tank_sprite_2, True, False)
 start_button = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.33 * SCREEN_HEIGHT, "START", 25, CYAN, BLACK, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(CYAN))
 quit_button = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.66 * SCREEN_HEIGHT, "QUIT", 25, RED, BLACK, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(RED))
 settings_button = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.496 * SCREEN_HEIGHT, "SETTINGS", 25, ORANGE, BLACK, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(ORANGE))
+
+
+def calculate_distance(x1, y1, x2, y2):
+    """
+    This function takes in the x and y coordinates of two points and calculates the distance between them.
+    """
+    distance = ((x2 - x1)**2 + (y2 - y1)**2)**0.5
+    return int(distance)
