@@ -4,16 +4,10 @@ import Button
 from endScreen import end_Screen
 from Terrain import create_terrain, calculate_y, background_blit
 from Collisions import *
+from WeaponSelector import *
 
 pygame.init()
 pygame.display.set_caption("Tanks")
-
-def calculate_distance(x1, y1, x2, y2):
-        """
-        This function takes in the x and y coordinates of two points and calculates the distance between them.
-        """
-        distance = ((x2 - x1)**2 + (y2 - y1)**2)**0.5
-        return int(distance)
 
 # sprite dimensions
 SCREEN_WIDTH = 1300 # change to 1000 if problems
@@ -24,10 +18,11 @@ BUTTON_WIDTH = 600
 BUTTON_HEIGHT = 100
 
 window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+mouse_position = pygame.mouse.get_pos()
 
 # tank dimensions
 TANK_WIDTH = 80
-TANK_HEIGHT = 80
+TANK_HEIGHT = 40
 TANK_HITBOX_WIDTH = TANK_WIDTH
 TANK_HITBOX_HEIGHT = TANK_HEIGHT/5
 
@@ -69,6 +64,14 @@ HEALTH_BAR_Y = 10
 health_tank1 = STARTING_HEALTH
 health_tank2 = STARTING_HEALTH
 
+RED = (255, 0, 0)
+CYAN = (0,255,255)
+BLACK = (0,0,0)
+ORANGE = (255,165,0)
+WHITE = (255, 255, 255)
+
+TANK_GUN_COLOUR = WHITE
+
 # Sets up the weapons menu LEFT
 L_WEAPON_ONE_X = 0.1 * SCREEN_WIDTH - 80
 L_WEAPON_ONE_Y = 0.18 * SCREEN_HEIGHT
@@ -88,12 +91,6 @@ R_WEAPON_TWO_Y = 0.18 * SCREEN_HEIGHT
 
 R_red_box_pressed = True
 R_green_box_pressed = False
-
-RED = (255, 0, 0)
-CYAN = (0,255,255)
-BLACK = (0,0,0)
-ORANGE = (255,165,0)
-WHITE = (0, 0, 0)
 
 # loads the background image
 BACKGROUND_WIDTH = 5
@@ -148,10 +145,23 @@ DISTANCE_BETWEEN = calculate_distance(x_tank1, y_tank1, x_tank2, y_tank2)
 running = True
 start_is_clicked = False
 
+BUTTON_X = 0.5 * SCREEN_WIDTH - 300
+BUTTON_FONT_SIZE = 25
+
 # create buttons
-start_button = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.33 * SCREEN_HEIGHT, "START", 25, CYAN, BLACK, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(CYAN))
-quit_button = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.66 * SCREEN_HEIGHT, "QUIT", 25, RED, BLACK, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(RED))
-settings_button = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.496 * SCREEN_HEIGHT, "SETTINGS", 25, ORANGE, BLACK, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(ORANGE))
+START_BUTTON_Y = 0.33 * SCREEN_HEIGHT
+start_button = Button.Button(BUTTON_X, START_BUTTON_Y, "START", 25, CYAN, BLACK, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(CYAN))
+
+QUIT_BUTTON_Y = 0.66 * SCREEN_HEIGHT
+quit_button = Button.Button(BUTTON_X, QUIT_BUTTON_Y, "QUIT", 25, RED, BLACK, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(RED))
+
+SETTINGS_BUTTON_Y = 0.496 * SCREEN_HEIGHT
+settings_button = Button.Button(BUTTON_X, SETTINGS_BUTTON_Y, "SETTINGS", 25, ORANGE, BLACK, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(ORANGE))
+
+selected_start_button = Button.Button(BUTTON_X, START_BUTTON_Y, "START", 25, BLACK, CYAN, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=10, border_color=(BLACK))
+selected_quit_button = Button.Button(BUTTON_X, QUIT_BUTTON_Y, "QUIT", 25, BLACK, RED, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=10, border_color=(BLACK))
+selected_settings_button = Button.Button(BUTTON_X, SETTINGS_BUTTON_Y, "SETTINGS", 25, BLACK, ORANGE, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=10, border_color=(BLACK))
+
 # main_menu_button 
 
 while running:    
@@ -162,10 +172,36 @@ while running:
     #draw background color
     bg = window.fill(BLACK)
 
+    pos = pygame.mouse.get_pos()
+    pos_x = pos[0]
+    pos_y = pos[1]
+
+    cursor_hover_x = (pos_x >= BUTTON_X) and (pos_x <= (BUTTON_X+BUTTON_WIDTH))
+    cursor_hover_y_start = (pos_y >= START_BUTTON_Y) and (pos_y <= (START_BUTTON_Y+BUTTON_HEIGHT))
+    cursor_hover_y_quit = (pos_y >= QUIT_BUTTON_Y) and (pos_y <= (QUIT_BUTTON_Y+BUTTON_HEIGHT))
+    cursor_hover_y_settings = (pos_y >= SETTINGS_BUTTON_Y) and (pos_y <= (SETTINGS_BUTTON_Y+BUTTON_HEIGHT))
+
     # draw buttons
-    start_action = start_button.draw(window)
-    quit_action = quit_button.draw(window)
-    setting_action = settings_button.draw(window)
+    if (cursor_hover_x and cursor_hover_y_start):
+        start_action = selected_start_button.draw(window)
+        quit_action = quit_button.draw(window)
+        setting_action = settings_button.draw(window)
+
+    elif (cursor_hover_x and cursor_hover_y_quit):
+        quit_action = selected_quit_button.draw(window)
+        start_action = start_button.draw(window)
+        setting_action = settings_button.draw(window)
+
+    elif (cursor_hover_x and cursor_hover_y_settings):
+        setting_action = selected_settings_button.draw(window)
+        start_action = start_button.draw(window)
+        quit_action = quit_button.draw(window)
+
+    else:
+        start_action = start_button.draw(window)
+        quit_action = quit_button.draw(window)
+        setting_action = settings_button.draw(window)
+
     # check if buttons were clicked
     if start_action:
         start_button_clicked = True
@@ -182,40 +218,41 @@ while running:
 
     pygame.display.flip()
 
-terrain = create_terrain(3)
-pygame.draw.lines(window, (150, 75, 0), False, terrain, BACKGROUND_WIDTH)
-pygame.display.flip()
+if start_button_clicked:
+    terrain = create_terrain(3)
+    pygame.draw.lines(window, (150, 75, 0), False, terrain, BACKGROUND_WIDTH)
+    pygame.display.flip()
 
-# weapons menu buttons
-red_bullet = pygame.image.load("bullet.png")
-red_bullet = pygame.transform.scale(red_bullet, (BOX_WIDTH - 10, BOX_HEIGHT - 10))
+    # weapons menu buttons
+    red_bullet = pygame.image.load("bullet.png")
+    red_bullet = pygame.transform.scale(red_bullet, (BOX_WIDTH - 10, BOX_HEIGHT - 10))
 
-green_bullet = pygame.image.load("greenBullet.png")
-green_bullet = pygame.transform.scale(green_bullet, (BOX_HEIGHT - 10, BOX_HEIGHT - 10))
+    green_bullet = pygame.image.load("greenBullet.png")
+    green_bullet = pygame.transform.scale(green_bullet, (BOX_HEIGHT - 10, BOX_HEIGHT - 10))
 
-#LEFT
-L_red_bullet_box = Button.Button(L_WEAPON_ONE_X, L_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
-L_red_box_outline = Button.Button(L_WEAPON_ONE_X, L_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
-L_white_outline_r = Button.Button(L_WEAPON_ONE_X, L_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+    #LEFT
+    L_red_bullet_box = Button.Button(L_WEAPON_ONE_X, L_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+    L_red_box_outline = Button.Button(L_WEAPON_ONE_X, L_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
+    L_white_outline_r = Button.Button(L_WEAPON_ONE_X, L_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
 
-L_green_bullet_box = Button.Button(L_WEAPON_TWO_X, L_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
-L_green_box_outline = Button.Button(L_WEAPON_TWO_X, L_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
-L_white_outline_g = Button.Button(L_WEAPON_TWO_X, L_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+    L_green_bullet_box = Button.Button(L_WEAPON_TWO_X, L_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+    L_green_box_outline = Button.Button(L_WEAPON_TWO_X, L_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
+    L_white_outline_g = Button.Button(L_WEAPON_TWO_X, L_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
 
-L_weapon_picked = red_bullet
-L_tank_shell = L_weapon_picked
+    L_weapon_picked = red_bullet
+    L_tank_shell = L_weapon_picked
 
-#RIGHT
-R_red_bullet_box = Button.Button(R_WEAPON_ONE_X, R_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
-R_red_box_outline = Button.Button(R_WEAPON_ONE_X, R_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
-R_white_outline_r = Button.Button(R_WEAPON_ONE_X, R_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+    #RIGHT
+    R_red_bullet_box = Button.Button(R_WEAPON_ONE_X, R_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+    R_red_box_outline = Button.Button(R_WEAPON_ONE_X, R_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
+    R_white_outline_r = Button.Button(R_WEAPON_ONE_X, R_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
 
-R_green_bullet_box = Button.Button(R_WEAPON_TWO_X, R_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
-R_green_box_outline = Button.Button(R_WEAPON_TWO_X, R_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
-R_white_outline_g = Button.Button(R_WEAPON_TWO_X, R_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+    R_green_bullet_box = Button.Button(R_WEAPON_TWO_X, R_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+    R_green_box_outline = Button.Button(R_WEAPON_TWO_X, R_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
+    R_white_outline_g = Button.Button(R_WEAPON_TWO_X, R_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
 
-R_weapon_picked = red_bullet
-R_tank_shell = R_weapon_picked
+    R_weapon_picked = red_bullet
+    R_tank_shell = R_weapon_picked
 
 # this loop runs as long as Tanks is running 
 while start_button_clicked:
@@ -271,7 +308,7 @@ while start_button_clicked:
     pygame.draw.rect(window, HEALTH_BAR_COLOR, (x_tank2, y_tank2 - 30, health_tank2/100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
 
     keys = pygame.key.get_pressed()
-    
+
     # Draws weapons menu LEFT
     L_red_bullet_box.draw(window)
     window.blit(red_bullet, (L_WEAPON_ONE_X + 5, L_WEAPON_ONE_Y + 5))
@@ -335,7 +372,7 @@ while start_button_clicked:
         R_red_draw = window.blit(red_bullet, (R_WEAPON_ONE_X + 5, R_WEAPON_ONE_Y + 5))
     R_tank_shell = pygame.transform.scale(R_weapon_picked, (BULLET_WIDTH, BULLET_HEIGHT))
     L_tank_shell = pygame.transform.scale(L_weapon_picked, (BULLET_WIDTH, BULLET_HEIGHT))
-         
+
     # movement of tank1
     if (keys[pygame.K_a]) and (x_tank1 > 0) and (x_tank1 - TANK_WIDTH - speed_tank1 != x_tank2):
         x_tank1 -= speed_tank1
@@ -368,27 +405,28 @@ while start_button_clicked:
     # tank1
     if (tank_1_left):
         window.blit(L_tank_sprite_1, (x_tank1, y_tank1))
-        pygame.draw.line(window, BLACK, (x_tank1 + (TANK_WIDTH/2), y_tank1),
+        pygame.draw.line(window, TANK_GUN_COLOUR, (x_tank1 + (TANK_WIDTH/2), y_tank1),
                      (x_tank1 + (TANK_WIDTH/2) + math.cos(math.radians(gun_angle)) * 50,
                       y_tank1 - math.sin(math.radians(gun_angle)) * 50), 3)
+        
     if (tank_1_right):
         window.blit(R_tank_sprite_1, (x_tank1, y_tank1))
-        pygame.draw.line(window, BLACK, (x_tank1 + (TANK_WIDTH/2), y_tank1),
+        pygame.draw.line(window, TANK_GUN_COLOUR, (x_tank1 + (TANK_WIDTH/2), y_tank1),
                      (x_tank1 + (TANK_WIDTH/2) + math.cos(math.radians(gun_angle)) * 50,
                       y_tank1 - math.sin(math.radians(gun_angle)) * 50), 3)
 
     # tank2
     if (tank_2_left):
         window.blit(L_tank_sprite_2, (x_tank2, y_tank2))
-        pygame.draw.line(window, BLACK, (x_tank2 + (TANK_WIDTH/2), y_tank2),
-                     (x_tank2 + (TANK_WIDTH/2) + math.cos(math.radians(gun_angle)) * 50,
-                      y_tank2 - math.sin(math.radians(gun_angle)) * 50), 3)
-    if (tank_2_right):
-        window.blit(R_tank_sprite_2, (x_tank2, y_tank2))
-        pygame.draw.line(window, BLACK, (x_tank2 + (TANK_WIDTH/2), y_tank2),
+        pygame.draw.line(window, TANK_GUN_COLOUR, (x_tank2 + (TANK_WIDTH/2), y_tank2),
                      (x_tank2 + (TANK_WIDTH/2) + math.cos(math.radians(gun_angle)) * 50,
                       y_tank2 - math.sin(math.radians(gun_angle)) * 50), 3)
 
+    if (tank_2_right):
+        window.blit(R_tank_sprite_2, (x_tank2, y_tank2))
+        pygame.draw.line(window, TANK_GUN_COLOUR, (x_tank2 + (TANK_WIDTH/2), y_tank2),
+                     (x_tank2 + (TANK_WIDTH/2) + math.cos(math.radians(gun_angle)) * 50,
+                      y_tank2 - math.sin(math.radians(gun_angle)) * 50), 3)
 
     # shooting
     angle_select = font.render(f"ANGLE: {round(shot_angle, 1)}", True, (0, 0, 0))
@@ -399,12 +437,6 @@ while start_button_clicked:
 
     Distance_select = font.render(f"DISTANCE: {DISTANCE_BETWEEN}", True, (0, 0, 0))
     window.blit(Distance_select, (SCREEN_WIDTH/2 - 50, 60))
-    
-
-
-    if (keys[pygame.K_TAB]):
-        jump = 100
-
 
     if (keys[pygame.K_w]) and (shot_angle < MAX_SHOT_ANGLE):
         pygame.time.delay(100)
@@ -468,7 +500,7 @@ while start_button_clicked:
                 shell_to_tank_y = abs(y_tank_shell - (y_tank2+50))
 
                 hit_confirm = tank_hit_detection(shell_to_tank_x, shell_to_tank_y)
-                hit_ground = y_tank_shell > (calculate_y(x_tank_shell) + 50)
+                hit_ground = y_tank_shell > (calculate_y(x_tank_shell)+50)
 
                 if (hit_confirm) or (hit_ground):
                     # window.blit(background_clear, (x_tank_shell, y_tank_shell))
@@ -520,7 +552,7 @@ while start_button_clicked:
                 shell_to_tank_y = abs(y_tank_shell - (y_tank1+50))
 
                 hit_confirm = tank_hit_detection(shell_to_tank_x, shell_to_tank_y)
-                hit_ground = y_tank_shell > (calculate_y(x_tank_shell) + 50)
+                hit_ground = y_tank_shell > (calculate_y(x_tank_shell)+50)
 
                 if (hit_confirm) or (hit_ground):
                     # window.blit(background_clear, (x_tank_shell, y_tank_shell))
