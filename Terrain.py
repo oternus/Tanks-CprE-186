@@ -9,11 +9,12 @@ from Conventions import *
 
 def background_blit(terrain):
     window.fill(BLUE)
-    pygame.draw.lines(window, (150, 75, 0), False, terrain, BACKGROUND_WIDTH)
+    pygame.draw.lines(window, (BLACK), False, terrain, BACKGROUND_WIDTH)
 
 def calculate_y(x):
+    x += 50
     y = 500 + (10*3) * math.sin(0.005*3*x)
-    return (y - 70)
+    return (y - 75)
 
 def create_terrain(difficulty):
     terrain_length = SCREEN_WIDTH
