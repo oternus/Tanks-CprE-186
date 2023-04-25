@@ -83,25 +83,6 @@ WHITE = (0, 0, 0)
 # loads the background image
 BACKGROUND_WIDTH = 5
 terrain = None
-background = pygame.image.load("background.png")
-background_clear = pygame.image.load("sky.png")
-background_clear = pygame.transform.scale(background_clear, (BULLET_WIDTH, BULLET_HEIGHT))
-
-# loads and scales the tank image
-L_tank_sprite_1 = pygame.image.load("tank_paint.png")
-L_tank_sprite_2 = pygame.image.load("tank_paint.png")
-L_tank_sprite_1 = pygame.transform.scale(L_tank_sprite_1, (TANK_WIDTH, TANK_HEIGHT))
-L_tank_sprite_2 = pygame.transform.scale(L_tank_sprite_2, (TANK_WIDTH, TANK_HEIGHT))
-
-# loads and scales the bullet image
-tank_shell = pygame.image.load("bullet.png")
-tank_shell = pygame.transform.scale(tank_shell, (BULLET_WIDTH, BULLET_HEIGHT))
-explosion = pygame.image.load("black_explosion.png")
-explosion = pygame.transform.scale(explosion, (EXPLOSION_WIDTH, EXPLOSION_HEIGHT))
-
-# direction changes
-R_tank_sprite_1 = pygame.transform.flip(L_tank_sprite_1, True, False)
-R_tank_sprite_2 = pygame.transform.flip(L_tank_sprite_2, True, False)
 
 # create buttons
 start_button = Button.Button(0.5 * SCREEN_WIDTH - 300, 0.33 * SCREEN_HEIGHT, "START", 25, CYAN, BLACK, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=2, border_color=(CYAN))
