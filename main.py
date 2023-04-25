@@ -165,6 +165,20 @@ selected_start_button = Button.Button(BUTTON_X, START_BUTTON_Y, "START", 25, BLA
 selected_quit_button = Button.Button(BUTTON_X, QUIT_BUTTON_Y, "QUIT", 25, BLACK, RED, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=5, border_color=(BLACK))
 selected_settings_button = Button.Button(BUTTON_X, SETTINGS_BUTTON_Y, "SETTINGS", 25, BLACK, ORANGE, 1, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, border=5, border_color=(BLACK))
 
+# Load the font for the instructions
+font = pygame.font.Font(None, 25)
+
+# Load the instructions from the text file
+with open("instructions.txt", "r") as f:
+    instructions_text = f.read()
+
+# Split the instructions by line and render each line as a text object
+instructions_lines = instructions_text.split("\n")
+instructions_objects = []
+for line in instructions_lines:
+    text_object = font.render(line, True, (255, 255, 255))
+    instructions_objects.append(text_object)
+
 # main_menu_button 
 
 while running:    
@@ -183,6 +197,10 @@ while running:
     cursor_hover_y_start = (pos_y >= START_BUTTON_Y) and (pos_y <= (START_BUTTON_Y+BUTTON_HEIGHT))
     cursor_hover_y_quit = (pos_y >= QUIT_BUTTON_Y) and (pos_y <= (QUIT_BUTTON_Y+BUTTON_HEIGHT))
     cursor_hover_y_settings = (pos_y >= SETTINGS_BUTTON_Y) and (pos_y <= (SETTINGS_BUTTON_Y+BUTTON_HEIGHT))
+    
+    # Draw the instruction to the screen
+    for i, text_object in enumerate(instructions_objects):
+        window.blit(text_object, (10, i * 30 + 10))
 
     # draw buttons
     if (cursor_hover_x and cursor_hover_y_start):
