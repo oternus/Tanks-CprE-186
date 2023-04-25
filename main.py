@@ -4,7 +4,7 @@ import Button
 from endScreen import end_Screen
 from Terrain import create_terrain, calculate_y, background_blit
 from Collisions import *
-from WeaponSelector import *
+from weaponSelector import *
 
 pygame.init()
 pygame.display.set_caption("Tanks")
@@ -108,7 +108,7 @@ L_tank_sprite_2 = pygame.transform.scale(L_tank_sprite_2, (TANK_WIDTH, TANK_HEIG
 # loads and scales the bullet image
 tank_shell = pygame.image.load("bullet.png")
 tank_shell = pygame.transform.scale(tank_shell, (BULLET_WIDTH, BULLET_HEIGHT))
-explosion = pygame.image.load("black_explosion.png")
+explosion = pygame.image.load("greenExplosion.png")
 explosion = pygame.transform.scale(explosion, (EXPLOSION_WIDTH, EXPLOSION_HEIGHT))
 
 # direction changes
