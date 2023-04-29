@@ -6,15 +6,17 @@ import Button
 pygame.font.init()
 
 from Conventions import *
+background = pygame.image.load("Game Assets/background.png")
+background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 def background_blit(terrain):
-    window.fill(BLUE)
+    window.blit(background, (0, 0))
     pygame.draw.lines(window, (BLACK), False, terrain, BACKGROUND_WIDTH)
 
 def calculate_y(x):
     x += 50
     y = 500 + (10*3) * math.sin(0.005*3*x)
-    return (y - 75)
+    return (y - 70)
 
 def create_terrain(difficulty):
     terrain_length = SCREEN_WIDTH
@@ -97,7 +99,7 @@ def terrain_generator():
 
       # draw the terrain
       if difficulty_selected:
-          bg = window.fill(BLACK)
+          bg = window.fill(WHITE)
           pygame.draw.lines(window, (150, 75, 0), False, terrain, BACKGROUND_WIDTH)
 
       # update the display

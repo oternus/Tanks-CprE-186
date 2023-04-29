@@ -78,7 +78,7 @@ RED = (255, 0, 0)
 CYAN = (0,255,255)
 BLACK = (0,0,0)
 ORANGE = (255,165,0)
-WHITE = (0, 0, 0)
+WHITE = (255, 255, 255)
 
 # loads the background image
 BACKGROUND_WIDTH = 5

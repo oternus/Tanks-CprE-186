@@ -69,8 +69,9 @@ CYAN = (0,255,255)
 BLACK = (0,0,0)
 ORANGE = (255,165,0)
 WHITE = (255, 255, 255)
+ARMY_GREEN = (72, 84, 37)
 
-TANK_GUN_COLOUR = BLACK
+TANK_GUN_COLOUR = ARMY_GREEN
 
 # Sets up the weapons menu LEFT
 L_WEAPON_ONE_X = 0.1 * SCREEN_WIDTH - 80
@@ -95,20 +96,20 @@ R_green_box_pressed = False
 # loads the background image
 BACKGROUND_WIDTH = 5
 terrain = None
-background = pygame.image.load("background.png")
-background_clear = pygame.image.load("sky.png")
+background = pygame.image.load("Game Assets/background.png")
+background_clear = pygame.image.load("Game Assets/sky.png")
 background_clear = pygame.transform.scale(background_clear, (BULLET_WIDTH, BULLET_HEIGHT))
 
 # loads and scales the tank image
-L_tank_sprite_1 = pygame.image.load("tankSpritev2.png")
-L_tank_sprite_2 = pygame.image.load("tankSpritev2.png")
+L_tank_sprite_1 = pygame.image.load("Game Assets/tankSpritev2.png")
+L_tank_sprite_2 = pygame.image.load("Game Assets/tankSpritev2.png")
 L_tank_sprite_1 = pygame.transform.scale(L_tank_sprite_1, (TANK_WIDTH, TANK_HEIGHT))
 L_tank_sprite_2 = pygame.transform.scale(L_tank_sprite_2, (TANK_WIDTH, TANK_HEIGHT))
 
 # loads and scales the bullet image
-tank_shell = pygame.image.load("bullet.png")
+tank_shell = pygame.image.load("Game Assets/bullet.png")
 tank_shell = pygame.transform.scale(tank_shell, (BULLET_WIDTH, BULLET_HEIGHT))
-explosion = pygame.image.load("greenExplosion.png")
+explosion = pygame.image.load("Game Assets/greenExplosion.png")
 explosion = pygame.transform.scale(explosion, (EXPLOSION_WIDTH, EXPLOSION_HEIGHT))
 
 # direction changes
@@ -169,15 +170,18 @@ selected_settings_button = Button.Button(BUTTON_X, SETTINGS_BUTTON_Y, "SETTINGS"
 font = pygame.font.Font(None, 25)
 
 # Load the instructions from the text file
-with open("instructions.txt", "r") as f:
+with open("Game Assets/instructions.txt", "r") as f:
     instructions_text = f.read()
 
 # Split the instructions by line and render each line as a text object
 instructions_lines = instructions_text.split("\n")
 instructions_objects = []
 for line in instructions_lines:
-    text_object = font.render(line, True, (255, 255, 255))
+    text_object = font.render(line, True, WHITE)
     instructions_objects.append(text_object)
+title_font = pygame.font.Font(None, 100)
+title_text = title_font.render("TANKS", True, WHITE)
+
 
 # main_menu_button 
 
@@ -201,6 +205,8 @@ while running:
     # Draw the instruction to the screen
     for i, text_object in enumerate(instructions_objects):
         window.blit(text_object, (10, i * 30 + 10))
+    
+    window.blit(title_text, (SCREEN_WIDTH/2 - 110, 80))
 
     # draw buttons
     if (cursor_hover_x and cursor_hover_y_start):
@@ -245,10 +251,10 @@ if start_button_clicked:
     pygame.display.flip()
 
     # weapons menu buttons
-    red_bullet = pygame.image.load("bullet.png")
+    red_bullet = pygame.image.load("Game Assets/bullet.png")
     red_bullet = pygame.transform.scale(red_bullet, (BOX_WIDTH - 10, BOX_HEIGHT - 10))
 
-    green_bullet = pygame.image.load("greenBullet.png")
+    green_bullet = pygame.image.load("Game Assets/greenBullet.png")
     green_bullet = pygame.transform.scale(green_bullet, (BOX_HEIGHT - 10, BOX_HEIGHT - 10))
 
     #LEFT
@@ -325,8 +331,8 @@ while start_button_clicked:
             start_button_clicked = 0    # ends the game
 
     # Draw the HEALTH bar
-    pygame.draw.rect(window, HEALTH_BAR_COLOR, (x_tank1, y_tank1 - 30, health_tank1/100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
-    pygame.draw.rect(window, HEALTH_BAR_COLOR, (x_tank2, y_tank2 - 30, health_tank2/100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
+    pygame.draw.rect(window, HEALTH_BAR_COLOR, (x_tank1, y_tank1 - 65, health_tank1/100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
+    pygame.draw.rect(window, HEALTH_BAR_COLOR, (x_tank2, y_tank2 - 65, health_tank2/100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
 
     keys = pygame.key.get_pressed()
 
@@ -446,20 +452,20 @@ while start_button_clicked:
                       y_tank2 - math.sin(math.radians(gun_angle_tank2)) * 50), 3)
 
     # shooting of tank 1
-    angle_select_tank1 = font.render(f"ANGLE: {round(shot_angle_tank1, 1)}", True, (0, 0, 0))
+    angle_select_tank1 = font.render(f"ANGLE: {round(shot_angle_tank1, 1)}", True, WHITE)
     window.blit(angle_select_tank1, (L_WEAPON_ONE_X, 20))
 
-    power_select_tank1 = font.render(f"POWER: {shot_power_tank1}", True, (0, 0, 0))
+    power_select_tank1 = font.render(f"POWER: {shot_power_tank1}", True, WHITE)
     window.blit(power_select_tank1, (L_WEAPON_ONE_X, 40))
 
     # shooting of tank 2
-    angle_select_tank2 = font.render(f"ANGLE: {round(shot_angle_tank2, 1)}", True, (0, 0, 0))
+    angle_select_tank2 = font.render(f"ANGLE: {round(shot_angle_tank2, 1)}", True, WHITE)
     window.blit(angle_select_tank2, (R_WEAPON_ONE_X, 20))
 
-    power_select_tank1 = font.render(f"POWER: {shot_power_tank2}", True, (0, 0, 0))
+    power_select_tank1 = font.render(f"POWER: {shot_power_tank2}", True, WHITE)
     window.blit(power_select_tank1, (R_WEAPON_ONE_X, 40))
 
-    Distance_select = font.render(f"DISTANCE: {DISTANCE_BETWEEN}", True, (0, 0, 0))
+    Distance_select = font.render(f"DISTANCE: {DISTANCE_BETWEEN}", True, WHITE)
     window.blit(Distance_select, (SCREEN_WIDTH/2 - 75, 60))
 
     if (keys[pygame.K_w]) and (shot_angle_tank1 < MAX_SHOT_ANGLE):
@@ -487,10 +493,10 @@ while start_button_clicked:
         pygame.time.delay(100)
         shot_power_tank1 -= 1
 
-    if (keys[pygame.K_p]) and (shot_power_tank2 < MAX_SHOT_POWER):
+    if (keys[pygame.K_RSHIFT]) and (shot_power_tank2 < MAX_SHOT_POWER):
         pygame.time.delay(100)
         shot_power_tank2 += 1
-    if (keys[pygame.K_o]) and (shot_power_tank2 > MIN_SHOT_POWER):
+    if (keys[pygame.K_RCTRL]) and (shot_power_tank2 > MIN_SHOT_POWER):
         pygame.time.delay(100)
         shot_power_tank2 -= 1
 

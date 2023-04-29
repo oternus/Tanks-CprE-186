@@ -1,6 +1,18 @@
-                                                        INSTRUCTIONS
-PLAYER MOVEMENT FOR TANK #1 (Left side) - Use W and S to control power, A and D to move tank left and right
-WEAPON SELECT 1 and 2 selects weapons 
-PLAYER MOVEMENT FOR TANK #2 (Right side) - Use up arrow and down arrow to control power, < and > to move tank left and right
-WEAPON SELECT 9 and 0 selects weapons
-BOTH PLAYERS USE SPACE TO SHOOT WHEN IT IS THEIR TURN
+
+
+
+
+
+
+
+            Player 1, left side
+            Movement: A, D
+            Weapon Select: 1, 2
+            Shot Power: LSHIFT, LCTRL
+            Shot Angle: W, S
+
+            Player 2, right side
+            Movement: LEFT, RIGHT
+            Weapon Select: 9, 0
+            Shot Power: RSHIFT, RCTRL
+            Shot Angle: UP, DOWN
