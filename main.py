@@ -499,6 +499,7 @@ while start_button_clicked:
             y_tank2 = calculate_y(x_tank2)
         else:
             start_button_clicked = 0    # ends the game
+        continue
     if (health_tank2 <= 0):
         pygame.time.delay(500)
         if (end_Screen("TANK 1") == 1):
@@ -510,6 +511,7 @@ while start_button_clicked:
             y_tank2 = calculate_y(x_tank2)
         else:
             start_button_clicked = 0    # ends the game
+        continue
 
     
     gun_angle_tank1 = shot_angle_tank1 * (720/45)
