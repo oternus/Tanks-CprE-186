@@ -308,29 +308,12 @@ while start_button_clicked:
     if (tank_2_left or tank_2_right or tank_1_left or tank_1_right):
         DISTANCE_BETWEEN = calculate_distance(x_tank1, y_tank1, x_tank2, y_tank2)
 
-    # game has ended
-    if (health_tank1 <= 0):
-        if (end_Screen("TANK 2") == 1):
-            health_tank1 = STARTING_HEALTH
-            health_tank2 = STARTING_HEALTH
-            x_tank1 = 0
-            y_tank1 = calculate_y(x_tank1)
-            x_tank2 = 600
-            y_tank2 = calculate_y(x_tank2)
-        else:
-            start_button_clicked = 0    # ends the game
-    if (health_tank2 <= 0):
-        if (end_Screen("TANK 1") == 1):
-            health_tank1 = STARTING_HEALTH
-            health_tank2 = STARTING_HEALTH
-            x_tank1 = 0
-            y_tank1 = calculate_y(x_tank1)
-            x_tank2 = 600
-            y_tank2 = calculate_y(x_tank2)
-        else:
-            start_button_clicked = 0    # ends the game
 
     # Draw the HEALTH bar
+    if (health_tank1 < 0):
+        health_tank1 = 0
+    if (health_tank2 < 0):
+        health_tank2 = 0
     pygame.draw.rect(window, HEALTH_BAR_COLOR, (x_tank1, y_tank1 - 65, health_tank1/100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
     pygame.draw.rect(window, HEALTH_BAR_COLOR, (x_tank2, y_tank2 - 65, health_tank2/100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
 
@@ -503,6 +486,30 @@ while start_button_clicked:
     # hitbox visualization
     pygame.display.flip()
     #pygame.draw.rect(window, HEALTH_BAR_COLOR, (HEALTH_BAR_X, HEALTH_BAR_Y, health_tank2 / 100 * HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
+
+    # game has ended
+    if (health_tank1 <= 0):
+        pygame.time.delay(500)
+        if (end_Screen("TANK 2") == 1):
+            health_tank1 = STARTING_HEALTH
+            health_tank2 = STARTING_HEALTH
+            x_tank1 = 0
+            y_tank1 = calculate_y(x_tank1)
+            x_tank2 = 600
+            y_tank2 = calculate_y(x_tank2)
+        else:
+            start_button_clicked = 0    # ends the game
+    if (health_tank2 <= 0):
+        pygame.time.delay(500)
+        if (end_Screen("TANK 1") == 1):
+            health_tank1 = STARTING_HEALTH
+            health_tank2 = STARTING_HEALTH
+            x_tank1 = 0
+            y_tank1 = calculate_y(x_tank1)
+            x_tank2 = 600
+            y_tank2 = calculate_y(x_tank2)
+        else:
+            start_button_clicked = 0    # ends the game
 
     
     gun_angle_tank1 = shot_angle_tank1 * (720/45)
