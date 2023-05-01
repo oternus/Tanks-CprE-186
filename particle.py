@@ -31,61 +31,24 @@ class WeaponParticles:
             for i in range(5):
                 offset_x = random.randint(-10, 10)
                 offset_y = random.randint(-10, 10)
-                particle = [x + offset_x, y + offset_y, random.randint(1, self.particle_size)]
+                particle_size = random.randint(1, self.particle_size)
+                particle_speed = random.randint(1, self.particle_speed)
+                particle_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+                particle = [x + offset_x, y + offset_y, particle_size, particle_speed, particle_color]
                 self.particles.append(particle)
 
         # Update and draw particles
         for particle in self.particles:
-            particle[0] += random.randint(-self.particle_speed, self.particle_speed)
-            particle[1] += random.randint(-self.particle_speed, self.particle_speed)
+            particle[0] += random.randint(-particle[3], particle[3])
+            particle[1] += random.randint(-particle[3], particle[3])
             particle[2] -= 0.1
 
             if particle[2] <= 0:
                 self.particles.remove(particle)
             else:
-                pygame.draw.circle(screen, self.particle_color, (int(particle[0]), int(particle[1])), int(particle[2]))
-
-class tankWeapons:
-    def __init__(self, Speed, Position, shotOrigin, color, Shape, radius, width):
-        self.Speed = Speed
-        self.Position = Position
-        self.shotOrigin = shotOrigin
-        self.color = color
-        if Shape == 'circle':
-            self.width = radius
-        else:
-            self.width = width
-        self.particles = WeaponParticles(self.Position)
+                particle_size = int(min(particle[2], 3))
+                pygame.draw.circle(screen, particle[4], (int(particle[0]), int(particle[1])), particle_size)
 
 
 
-    def draw(self, screen):
-        pygame.draw.circle(screen, self.color, (int(self.Position[0]), int(self.Position[1])), self.width)
-        self.particles.update_and_draw(screen)
 
-# Create a list of tank weapons
-weapons = []
-weapons.append(tankWeapons(10, (100, 100), 'center', (255, 0, 0), 'circle', 20, None))
-weapons.append(tankWeapons(10, (200, 200), 'center', (0, 255, 0), 'rectangle', None, 50))
-weapons.append(tankWeapons(10, (300, 300), 'center', (0, 0, 255), 'line', None, 100))
-
-# Run the Pygame loop
-running = True
-while running:
-    # Handle events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-    
-    # Fill the screen with black
-    screen.fill((0, 0, 0))
-    
-    # Draw the tank weapons and their particle effects
-    for weapon in weapons:
-        weapon.draw(screen)
-    
-    # Update the screen
-    pygame.display.flip()
-
-# Quit Pygame
-pygame.quit()
