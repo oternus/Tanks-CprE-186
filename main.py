@@ -5,6 +5,9 @@ from endScreen import end_Screen
 from Terrain import create_terrain, calculate_y, background_blit
 from Collisions import *
 from weaponSelector import *
+import marker
+from Lightning import draw_lightning
+
 
 pygame.init()
 pygame.display.set_caption("Tanks")
@@ -78,20 +81,35 @@ L_WEAPON_ONE_X = 0.1 * SCREEN_WIDTH - 80
 L_WEAPON_ONE_Y = 0.18 * SCREEN_HEIGHT
 L_WEAPON_TWO_X = 0.15 * SCREEN_WIDTH - 95
 L_WEAPON_TWO_Y = 0.18 * SCREEN_HEIGHT
+L_WEAPON_THREE_X = .2 * SCREEN_WIDTH - 110
+L_WEAPON_THREE_Y = .18 * SCREEN_HEIGHT
 BOX_HEIGHT = 50
 BOX_WIDTH = 50
 
 L_red_box_pressed = True
 L_green_box_pressed = False
+L_Strike_box_pressed = False
 
 # Sets up the weapons menu RIGHT
 R_WEAPON_ONE_X = 0.94 * SCREEN_WIDTH - 80
 R_WEAPON_ONE_Y = 0.18 * SCREEN_HEIGHT
 R_WEAPON_TWO_X = .99 * SCREEN_WIDTH - 95
 R_WEAPON_TWO_Y = 0.18 * SCREEN_HEIGHT
+R_WEAPON_THREE_X = 1.04 * SCREEN_WIDTH - 110
+R_WEAPON_THREE_Y = .18 * SCREEN_HEIGHT
 
 R_red_box_pressed = True
 R_green_box_pressed = False
+R_Strike_box_pressed = False
+
+#Marker for Strike
+Flare = marker.Marker(BLUE, 11, 13, None)
+Flare_Surface = pygame.Surface((Flare.width, Flare.height))
+Flare.draw(Flare_Surface)
+flare_on_ground = False
+
+
+
 
 # loads the background image
 BACKGROUND_WIDTH = 5
@@ -257,10 +275,17 @@ if start_button_clicked:
     green_bullet = pygame.image.load("Game Assets/greenBullet.png")
     green_bullet = pygame.transform.scale(green_bullet, (BOX_HEIGHT - 10, BOX_HEIGHT - 10))
 
+    Strike_Marker = pygame.image.load("Game Assets/strike.png")
+    Strike_Marker = pygame.transform.scale(Strike_Marker, (BOX_WIDTH - 10, BOX_HEIGHT - 10))
+    
+
     #LEFT
     L_red_bullet_box = Button.Button(L_WEAPON_ONE_X, L_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
     L_red_box_outline = Button.Button(L_WEAPON_ONE_X, L_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
     L_white_outline_r = Button.Button(L_WEAPON_ONE_X, L_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+
+    L_Strike_box = Button.Button(L_WEAPON_THREE_X, L_WEAPON_THREE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+    L_Strike_box_outline = Button.Button(L_WEAPON_THREE_X, L_WEAPON_THREE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
 
     L_green_bullet_box = Button.Button(L_WEAPON_TWO_X, L_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
     L_green_box_outline = Button.Button(L_WEAPON_TWO_X, L_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
@@ -273,6 +298,9 @@ if start_button_clicked:
     R_red_bullet_box = Button.Button(R_WEAPON_ONE_X, R_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
     R_red_box_outline = Button.Button(R_WEAPON_ONE_X, R_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
     R_white_outline_r = Button.Button(R_WEAPON_ONE_X, R_WEAPON_ONE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+
+    R_Strike_box = Button.Button(R_WEAPON_THREE_X, R_WEAPON_THREE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
+    R_Strike_box_outline = Button.Button(R_WEAPON_THREE_X, R_WEAPON_THREE_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
 
     R_green_bullet_box = Button.Button(R_WEAPON_TWO_X, R_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 2, border_color = (WHITE))
     R_green_box_outline = Button.Button(R_WEAPON_TWO_X, R_WEAPON_TWO_Y, "", 30, BLACK, 1, width = BOX_WIDTH, height = BOX_HEIGHT, border = 4, border_color = (RED))
@@ -288,6 +316,9 @@ while start_button_clicked:
     if main_menu_action:
         start_button_clicked = False
         running = True
+
+
+    
 
     # everything happens 1/60th of a second
     clock.tick(FPS)
@@ -325,16 +356,27 @@ while start_button_clicked:
 
     L_green_bullet_box.draw(window)
     window.blit(green_bullet, (L_WEAPON_TWO_X + 5, L_WEAPON_TWO_Y + 5))
+
+    L_Strike_box.draw(window)
+    window.blit(Strike_Marker, (L_WEAPON_THREE_X + 5, L_WEAPON_THREE_Y + 5))
     
     if (keys[pygame.K_1]):
         L_red_box_pressed = True
         L_green_box_pressed = False
+        L_Strike_box_pressed = False
         L_weapon_picked = red_bullet
         
     elif (keys[pygame.K_2]):
         L_red_box_pressed = False
         L_green_box_pressed = True
+        L_Strike_box_pressed = False
         L_weapon_picked = green_bullet
+
+    elif (keys[pygame.K_3]):
+        L_red_box_pressed = False
+        L_green_box_pressed = False
+        L_Strike_box_pressed = True
+        L_weapon_picked = Flare_Surface
 
     if L_red_box_pressed:
         L_red_outline = L_red_box_outline.draw(window)
@@ -350,21 +392,41 @@ while start_button_clicked:
         L_white_outline = L_white_outline_r.draw(window)
         L_red_draw = window.blit(red_bullet, (L_WEAPON_ONE_X + 5, L_WEAPON_ONE_Y + 5))
 
+    if L_Strike_box_pressed:
+        L_Strike_box_outline.draw(window)
+        L_Strike_draw = window.blit(Strike_Marker, (L_WEAPON_THREE_X + 5, L_WEAPON_THREE_Y + 5))
+    else:
+        L_Strike_draw = window.blit(Strike_Marker, (L_WEAPON_THREE_X + 5, L_WEAPON_THREE_Y + 5))
+
+        
+
     # Draws weapons menu RIGHT
     R_red_bullet_box.draw(window)
     window.blit(red_bullet, (R_WEAPON_ONE_X + 5, R_WEAPON_ONE_Y + 5))
 
     R_green_bullet_box.draw(window)
     window.blit(green_bullet, (R_WEAPON_TWO_X + 5, R_WEAPON_TWO_Y + 5))
+
+    R_Strike_box.draw(window)
+    window.blit(Strike_Marker, (R_WEAPON_THREE_X + 5, R_WEAPON_THREE_Y + 5))
     
+
+    if (keys[pygame.K_MINUS]):
+        R_red_box_pressed = False
+        R_green_box_pressed = False
+        R_Strike_box_pressed = True
+        R_weapon_picked = Flare_Surface
+
     if (keys[pygame.K_9]):
         R_red_box_pressed = True
         R_green_box_pressed = False
+        R_Strike_box_pressed = False
         R_weapon_picked = red_bullet
         
     elif (keys[pygame.K_0]):
         R_red_box_pressed = False
         R_green_box_pressed = True
+        R_Strike_box_pressed = False
         R_weapon_picked = green_bullet
 
     if R_red_box_pressed:
@@ -381,8 +443,17 @@ while start_button_clicked:
         R_white_outline = R_white_outline_r.draw(window)
         R_red_draw = window.blit(red_bullet, (R_WEAPON_ONE_X + 5, R_WEAPON_ONE_Y + 5))
 
+
+    if R_Strike_box_pressed:
+        R_Strike_box_outline.draw(window)
+        R_Strike_draw = window.blit(Strike_Marker, (R_WEAPON_THREE_X + 5, R_WEAPON_THREE_Y + 5))
+    else:
+        R_Strike_draw = window.blit(Strike_Marker, (R_WEAPON_THREE_X + 5, R_WEAPON_THREE_Y + 5))
+        
+
     R_tank_shell = pygame.transform.scale(R_weapon_picked, (BULLET_WIDTH, BULLET_HEIGHT))
     L_tank_shell = pygame.transform.scale(L_weapon_picked, (BULLET_WIDTH, BULLET_HEIGHT))
+    
 
     # movement of tank1
     if (keys[pygame.K_a]) and (x_tank1 > 0) and (x_tank1 - TANK_WIDTH - speed_tank1 != x_tank2):
@@ -542,8 +613,8 @@ while start_button_clicked:
 
                 if (tank_1_right):
                     #pygame.draw.circle(window, (GREEN), (x_tank_shell, y_tank_shell), BULLET_WIDTH, 0)
-                    window.blit(L_tank_shell, (x_tank_shell, y_tank_shell))
                     window.blit(background_clear, (x_tank_shell_old, y_tank_shell_old))
+                    window.blit(L_tank_shell, (x_tank_shell, y_tank_shell))
                     pygame.display.update()
                     x_tank_shell_old = x_tank_shell
                     x_tank_shell += shot_power_tank1
@@ -566,14 +637,30 @@ while start_button_clicked:
                     window.blit(explosion, (x_tank_shell, y_tank_shell))
                     pygame.display.update()
                     pygame.time.delay(TIME_DELAY)
-                    if (hit_confirm):
-                        health_tank2 -= (BULLET_DAMAGE + bonus_bullet_damage)
+                    if (hit_confirm and L_weapon_picked == Flare_Surface):
+                        health_tank2 -= 0
+                        x_flare = x_tank_shell
+                        y_flare = terrain[0][1]
+                        flare_on_ground = True
+                        if flare_on_ground:
+                            window.blit(Flare_Surface, (x_flare, y_flare))
+                            lightning_surface, health_tank2 = draw_lightning(x_flare, 0, x_flare, y_flare, 7, 200, shell_to_tank_x, shell_to_tank_y, health_tank2)
+                            pygame.display.update()
+                            break
+                           
+                    elif (hit_confirm and L_weapon_picked != Flare_Surface):
+                            health_tank2 -= (BULLET_DAMAGE + bonus_bullet_damage)
+                    
                     x_tank_shell = 10000
                     y_tank_shell = 10000
+                   
 
                 turn_tank1 = False
                 turn_tank2 = True
+                
 
+
+               
         elif (turn_tank2):
 
             x_tank_shell_old = x_tank_shell
@@ -590,7 +677,7 @@ while start_button_clicked:
                 magic_number += shot_angle_tank2
 
                 pygame.time.delay(TIME_DELAY_BETWEEN_BULLETS)
-                y_tank_shell = + y_original_tank2 + ((magic_number) * (magic_number) * (0.4)) - 40
+                y_tank_shell = y_original_tank2 + ((magic_number) * (magic_number) * (0.4)) - 40
 
                 if (tank_2_right):
                     window.blit(R_tank_shell, (x_tank_shell, y_tank_shell))
@@ -618,8 +705,18 @@ while start_button_clicked:
                     window.blit(explosion, (x_tank_shell, y_tank_shell))
                     pygame.display.update()
                     pygame.time.delay(TIME_DELAY)
-                    if (hit_confirm):
-                        health_tank1 -= (BULLET_DAMAGE + bonus_bullet_damage)
+                    if (hit_confirm and R_weapon_picked == Flare_Surface):
+                        health_tank2 -= 0
+                        x_flare = x_tank_shell
+                        y_flare = terrain[0][1]
+                        flare_on_ground = True
+                        if flare_on_ground:
+                            lightning_surface, health_tank1 = draw_lightning(x_flare, 0, x_flare, y_flare, 7, 200, shell_to_tank_x, shell_to_tank_y, health_tank1)
+                            pygame.display.update()
+                           
+                    elif (hit_confirm and R_weapon_picked != Flare_Surface):
+                            health_tank1 -= (BULLET_DAMAGE + bonus_bullet_damage)
+
                     x_tank_shell = 10000
                     y_tank_shell = 10000
  
