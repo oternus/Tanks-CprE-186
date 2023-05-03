@@ -103,7 +103,7 @@ R_green_box_pressed = False
 R_Strike_box_pressed = False
 
 #Marker for Strike
-Flare = marker.Marker(BLUE, 11, 13, None)
+Flare = marker.Marker(BLUE, 5, 21, None)
 Flare_Surface = pygame.Surface((Flare.width, Flare.height))
 Flare.draw(Flare_Surface)
 flare_on_ground = False
@@ -639,14 +639,13 @@ while start_button_clicked:
                     pygame.time.delay(TIME_DELAY)
                     if (hit_confirm and L_weapon_picked == Flare_Surface):
                         health_tank2 -= 0
-                        x_flare = x_tank_shell
-                        y_flare = terrain[0][1]
+                        x_flare = x_tank2 + TANK_WIDTH  / 2
+                        y_flare = y_tank2 + TANK_HEIGHT
                         flare_on_ground = True
                         if flare_on_ground:
-                            window.blit(Flare_Surface, (x_flare, y_flare))
-                            lightning_surface, health_tank2 = draw_lightning(x_flare, 0, x_flare, y_flare, 7, 200, shell_to_tank_x, shell_to_tank_y, health_tank2)
+                            lightning_surface, health_tank2 = draw_lightning(x_flare, 0, x_flare, y_flare, 7, 50, shell_to_tank_x, shell_to_tank_y, health_tank2)
                             pygame.display.update()
-                            break
+                            
                            
                     elif (hit_confirm and L_weapon_picked != Flare_Surface):
                             health_tank2 -= (BULLET_DAMAGE + bonus_bullet_damage)
@@ -707,11 +706,12 @@ while start_button_clicked:
                     pygame.time.delay(TIME_DELAY)
                     if (hit_confirm and R_weapon_picked == Flare_Surface):
                         health_tank2 -= 0
-                        x_flare = x_tank_shell
-                        y_flare = terrain[0][1]
+                        x_flare = x_tank1 + TANK_WIDTH  / 2
+                        y_flare = y_tank1 + TANK_HEIGHT
                         flare_on_ground = True
                         if flare_on_ground:
-                            lightning_surface, health_tank1 = draw_lightning(x_flare, 0, x_flare, y_flare, 7, 200, shell_to_tank_x, shell_to_tank_y, health_tank1)
+                            
+                            lightning_surface, health_tank1 = draw_lightning(x_flare, 0, x_flare, y_flare, 7, 50, shell_to_tank_x, shell_to_tank_y, health_tank1)
                             pygame.display.update()
                            
                     elif (hit_confirm and R_weapon_picked != Flare_Surface):

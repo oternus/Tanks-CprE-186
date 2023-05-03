@@ -61,7 +61,7 @@ def draw_lightning(start_x, start_y, end_x, end_y, num_strikes, delay, shell_x, 
 
         # check if lightning hit the tank
         if tank_hit_detection(shell_x, shell_y):
-            Lightning_DAMAGE = 3
+            Lightning_DAMAGE = 4
             health_tank -= Lightning_DAMAGE
 
         # create WeaponParticles effect at target location

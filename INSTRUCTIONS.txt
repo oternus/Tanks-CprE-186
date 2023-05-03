@@ -1,0 +1,18 @@
+
+
+
+
+
+
+
+            Player 1, left side
+            Movement: A, D
+            Weapon Select: 1, 2, 3
+            Shot Power: LSHIFT, LCTRL
+            Shot Angle: W, S
+
+            Player 2, right side
+            Movement: LEFT, RIGHT
+            Weapon Select: 9, 0, -
+            Shot Power: RSHIFT, RCTRL
+            Shot Angle: UP, DOWN
